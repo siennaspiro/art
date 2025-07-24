@@ -10,7 +10,7 @@ body {
 .hero {
   position: relative;
   width: 100%;
-  background: url('great_fire_of_rome.jpg') center center / cover no-repeat;
+  background: url('great_fire_of_rome.png') center center / cover no-repeat;
   min-height: 70vh;
   display: flex;
   align-items: center;
