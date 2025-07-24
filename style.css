@@ -9,14 +9,14 @@ body {
 
 .hero {
   position: relative;
-  height: 85vh;
-  overflow: hidden;
+  width: 100%;
 }
 
 .hero img {
   width: 100%;
   height: auto;
   display: block;
+  position: relative;
 }
 
 .hero-text {
