@@ -58,9 +58,37 @@ main {
 
 .gallery {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  margin: 4rem 0;
+}
+
+.slider {
+  width: 60%;
+  max-width: 600px;
+  position: relative;
+}
+
+.slide {
+  width: 100%;
+  display: none;
+}
+
+.slide.active {
+  display: block;
+}
+
+.nav {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #333;
+  padding: 0 1rem;
+}
+
+.nav:hover {
+  color: #000;
 }
 
 .art-tile {
