@@ -64,8 +64,8 @@ main {
 }
 
 .slider {
-  width: 60%;
-  max-width: 600px;
+  width: 80%;
+  max-width: 800px;
   position: relative;
 }
 
