@@ -91,17 +91,12 @@ main {
   color: #000;
 }
 
-.art-tile {
-  background: #e6d3c4;
-  border-radius: 8px;
-  width: 180px;
-  height: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-style: italic;
-  color: #5a3e36;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+.caption {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  color: #4a3a2a;
 }
 
 footer {
