@@ -70,6 +70,7 @@
     function showSlide(index) {
       slides.forEach(slide => slide.classList.remove("active"));
       slides[index].classList.add("active");
+      caption.textContent = slides[index].alt || "";
     }
 
     function changeSlide(direction) {
