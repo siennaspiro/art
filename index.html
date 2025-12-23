@@ -41,22 +41,24 @@
       </p>
     </section>
 
-    <!-- IMAGE GALLERY -->
-    <section class="gallery">
-      <button class="nav prev" onclick="changeSlide(-1)">&#10094;</button>
+<!-- IMAGE GALLERY -->
+<section class="gallery">
+  <button class="nav prev" onclick="changeSlide(-1)">&#10094;</button>
 
-      <div class="slider">
-        <img src="images/image1.png" class="slide active" alt="First Contact">
-        <img src="images/image2.png" class="slide" alt="Baby Face">
-        <img src="images/image3.png" class="slide" alt="Watching">
-        <img src="images/image4.png" class="slide" alt="Save for later">
-        <img src="images/image5.png" class="slide" alt="Chungus Khan">
-      </div>
+  <div class="viewer">
+    <div class="slider">
+      <img src="images/image1.png" class="slide active" alt="First Contact">
+      <img src="images/image2.png" class="slide" alt="Baby Face">
+      <img src="images/image3.png" class="slide" alt="Watching">
+      <img src="images/image4.png" class="slide" alt="Save for later">
+      <img src="images/image5.png" class="slide" alt="Chungus Khan">
+    </div>
 
-      <button class="nav next" onclick="changeSlide(1)">&#10095;</button>
-      <div id="caption" class="caption"></div>
-    </section>
-  </main>
+    <div id="slideCaption" class="caption"></div>
+  </div>
+
+  <button class="nav next" onclick="changeSlide(1)">&#10095;</button>
+</section>
 
   <footer>
     2025 Sienna Spiro Portfolio | sienna.spiro.contact@gmail.com
