@@ -68,6 +68,7 @@
   <script>
     let currentSlide = 0;
     const slides = document.querySelectorAll(".slide");
+    const caption = document.getElementById("slideCaption");
 
     function showSlide(index) {
       slides.forEach(slide => slide.classList.remove("active"));
