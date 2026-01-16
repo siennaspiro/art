@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Art Gallery</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
 
   <style>
     body {
@@ -64,6 +63,15 @@
       letter-spacing: 1px;
     }
 
+    /* Make real artwork images behave like the placeholder (square + crop nicely) */
+    .card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      cursor: zoom-in;
+    }
+
     .card-content {
       padding: 16px;
     }
@@ -85,6 +93,29 @@
       font-weight: 600;
       color: #2563eb;
     }
+
+    /* ===== Lightbox (click image to fullscreen) ===== */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      cursor: zoom-out;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    #lightbox img {
+      max-width: 95vw;
+      max-height: 95vh;
+      object-fit: contain;
+      display: block;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -99,16 +130,17 @@
 
     <!-- ART PIECE 1 -->
     <div class="card">
-      <img 
-        src="consuMe.png" 
-        style="width:100%; aspect-ratio:1/1; object-fit:cover;"
+      <img
+        src="consuMe.png"
+        alt="consuMe"
+        onclick="openLightbox(this.src, this.alt)"
       >
       <div class="card-content">
         <div class="card-title">consuMe</div>
         <div class="card-description">nonzero omega, hungry, kelvin is mad, curve, cry, convection</div>
       </div>
     </div>
-    
+
     <!-- ART PIECE 2 -->
     <div class="card">
       <div class="art-placeholder">Coming Soon</div>
@@ -209,6 +241,29 @@
     </div>
 
   </main>
+
+  <!-- Lightbox overlay (one per page) -->
+  <div id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" alt="">
+  </div>
+
+  <script>
+    function openLightbox(src, alt) {
+      const lightbox = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      img.src = src;
+      img.alt = alt || '';
+      lightbox.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
 
 </body>
 </html>
