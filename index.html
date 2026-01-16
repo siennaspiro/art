@@ -46,32 +46,5 @@
     2025 Sienna Spiro Portfolio | sienna.spiro.contact@gmail.com
   </footer>
 
-  <!-- GALLERY SCRIPT -->
-  <script>
-    let currentSlide = 0;
-    const slides = document.querySelectorAll(".slide");
-    const caption = document.getElementById("slideCaption");
-
-    function showSlide(index) {
-      slides.forEach(slide => slide.classList.remove("active"));
-      slides[index].classList.add("active");
-      caption.textContent = slides[index].alt || "";
-    }
-
-    function changeSlide(direction) {
-      currentSlide += direction;
-
-      if (currentSlide < 0) {
-        currentSlide = slides.length - 1;
-      }
-
-      if (currentSlide >= slides.length) {
-        currentSlide = 0;
-      }
-
-      showSlide(currentSlide);
-    }
-      showSlide(currentSlide);
-  </script>
 </body>
 </html>
