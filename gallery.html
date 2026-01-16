@@ -155,4 +155,132 @@
       <div class="art-placeholder">Coming Soon</div>
       <div class="card-content">
         <div class="card-title">Untitled III</div>
-        <d
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+    <!-- ART PIECE 4 -->
+    <div class="card">
+      <div class="art-placeholder">Coming Soon</div>
+      <div class="card-content">
+        <div class="card-title">Untitled IV</div>
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+    <!-- ART PIECE 5 -->
+    <div class="card">
+      <div class="art-placeholder">Coming Soon</div>
+      <div class="card-content">
+        <div class="card-title">Untitled V</div>
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+    <!-- ART PIECE 6 -->
+    <div class="card">
+      <div class="art-placeholder">Coming Soon</div>
+      <div class="card-content">
+        <div class="card-title">Untitled VI</div>
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+    <!-- ART PIECE 7 -->
+    <div class="card">
+      <div class="art-placeholder">Coming Soon</div>
+      <div class="card-content">
+        <div class="card-title">Untitled VII</div>
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+    <!-- ART PIECE 8 -->
+    <div class="card">
+      <div class="art-placeholder">Coming Soon</div>
+      <div class="card-content">
+        <div class="card-title">Untitled VIII</div>
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+    <!-- ART PIECE 9 -->
+    <div class="card">
+      <div class="art-placeholder">Coming Soon</div>
+      <div class="card-content">
+        <div class="card-title">Untitled IX</div>
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+    <!-- ART PIECE 10 -->
+    <div class="card">
+      <div class="art-placeholder">Coming Soon</div>
+      <div class="card-content">
+        <div class="card-title">Untitled X</div>
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+    <!-- ART PIECE 11 -->
+    <div class="card">
+      <div class="art-placeholder">Coming Soon</div>
+      <div class="card-content">
+        <div class="card-title">Untitled XI</div>
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+    <!-- ART PIECE 12 -->
+    <div class="card">
+      <div class="art-placeholder">Coming Soon</div>
+      <div class="card-content">
+        <div class="card-title">Untitled XII</div>
+        <div class="card-description">Coming soon.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Lightbox overlay (one per page) -->
+  <div id="lightbox">
+    <img id="lightbox-img" alt="">
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+
+      if (!lightbox || !lightboxImg) {
+        console.error('Lightbox elements not found (#lightbox, #lightbox-img).');
+        return;
+      }
+
+      // Open lightbox when clicking any artwork image
+      document.querySelectorAll('.card img').forEach((img) => {
+        img.addEventListener('click', () => {
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt || '';
+          lightbox.style.display = 'flex';
+        });
+      });
+
+      // Close when clicking the overlay (but not when clicking the image)
+      lightbox.addEventListener('click', () => {
+        lightbox.style.display = 'none';
+      });
+
+      lightboxImg.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') lightbox.style.display = 'none';
+      });
+    });
+  </script>
+
+</body>
+</html>
