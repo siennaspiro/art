@@ -115,6 +115,7 @@
       display: block;
       box-shadow: 0 20px 60px rgba(0,0,0,0.6);
       border-radius: 8px;
+      cursor: default;
     }
   </style>
 </head>
@@ -133,7 +134,6 @@
       <img
         src="consuMe.png"
         alt="consuMe"
-        onclick="openLightbox(this.src, this.alt)"
       >
       <div class="card-content">
         <div class="card-title">consuMe</div>
@@ -155,115 +155,4 @@
       <div class="art-placeholder">Coming Soon</div>
       <div class="card-content">
         <div class="card-title">Untitled III</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-    <!-- ART PIECE 4 -->
-    <div class="card">
-      <div class="art-placeholder">Coming Soon</div>
-      <div class="card-content">
-        <div class="card-title">Untitled IV</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-    <!-- ART PIECE 5 -->
-    <div class="card">
-      <div class="art-placeholder">Coming Soon</div>
-      <div class="card-content">
-        <div class="card-title">Untitled V</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-    <!-- ART PIECE 6 -->
-    <div class="card">
-      <div class="art-placeholder">Coming Soon</div>
-      <div class="card-content">
-        <div class="card-title">Untitled VI</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-    <!-- ART PIECE 7 -->
-    <div class="card">
-      <div class="art-placeholder">Coming Soon</div>
-      <div class="card-content">
-        <div class="card-title">Untitled VII</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-    <!-- ART PIECE 8 -->
-    <div class="card">
-      <div class="art-placeholder">Coming Soon</div>
-      <div class="card-content">
-        <div class="card-title">Untitled VIII</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-    <!-- ART PIECE 9 -->
-    <div class="card">
-      <div class="art-placeholder">Coming Soon</div>
-      <div class="card-content">
-        <div class="card-title">Untitled IX</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-    <!-- ART PIECE 10 -->
-    <div class="card">
-      <div class="art-placeholder">Coming Soon</div>
-      <div class="card-content">
-        <div class="card-title">Untitled X</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-    <!-- ART PIECE 11 -->
-    <div class="card">
-      <div class="art-placeholder">Coming Soon</div>
-      <div class="card-content">
-        <div class="card-title">Untitled XI</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-    <!-- ART PIECE 12 -->
-    <div class="card">
-      <div class="art-placeholder">Coming Soon</div>
-      <div class="card-content">
-        <div class="card-title">Untitled XII</div>
-        <div class="card-description">Coming soon.</div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- Lightbox overlay (one per page) -->
-  <div id="lightbox" onclick="closeLightbox()">
-    <img id="lightbox-img" alt="">
-  </div>
-
-  <script>
-    function openLightbox(src, alt) {
-      const lightbox = document.getElementById('lightbox');
-      const img = document.getElementById('lightbox-img');
-      img.src = src;
-      img.alt = alt || '';
-      lightbox.style.display = 'flex';
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightbox').style.display = 'none';
-    }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeLightbox();
-    });
-  </script>
-
-</body>
-</html>
+        <d
