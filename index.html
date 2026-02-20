@@ -18,13 +18,38 @@
       position: relative;
       width: 100%;
       height: 70vh;
-      background: url('great_fire_of_rome.png') center center / cover no-repeat;
+
+      /* Replace image background with animated canvas behind text */
+      background: #0a0706; /* fallback if JS/canvas disabled */
+      overflow: hidden;
+
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+    /* Fire canvas sits behind everything in hero */
+    canvas#fire {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 0;
+    }
+
+    /* Optional: subtle dark overlay to make text pop */
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.15), rgba(0,0,0,0.55));
+      z-index: 1;
+      pointer-events: none;
+    }
+
     .hero-text {
+      position: relative;
       z-index: 2;
       color: #fff8f0;
       text-align: center;
@@ -63,12 +88,10 @@
       color: #6e4a3a;
     }
 
-        /* Button link */
     .btn {
       display: block;
       width: fit-content;
       margin: 2rem auto 0;
-    
       padding: 12px 22px;
       background-color: #3e2f2a;
       color: #fff8f0;
@@ -94,19 +117,10 @@
       font-size: 0.9rem;
     }
 
-    /* Responsive Typography for Smaller Screens */
     @media screen and (max-width: 768px) {
-      .hero {
-        min-height: 70vh;
-      }
-
-      .hero-text h1 {
-        font-size: 2.5rem;
-      }
-
-      .subtitle {
-        font-size: 1rem;
-      }
+      .hero { min-height: 70vh; }
+      .hero-text h1 { font-size: 2.5rem; }
+      .subtitle { font-size: 1rem; }
     }
   </style>
 
@@ -122,6 +136,9 @@
 
 <body>
   <header class="hero">
+    <!-- Fire animation replaces great_fire_of_rome.png -->
+    <canvas id="fire"></canvas>
+
     <div class="hero-text">
       <h1>Sienna Spiro</h1>
       <p class="subtitle">A meditation in breath and fire</p>
@@ -152,5 +169,331 @@
     2026 Sienna Spiro Portfolio | sienna.spiro.contact@gmail.com
   </footer>
 
+  <script>
+    // Adapted from your particle-fire.html so it renders INSIDE the hero (not full-screen). :contentReference[oaicite:1]{index=1}
+    (() => {
+      const canvas = document.getElementById("fire");
+      const ctx = canvas.getContext("2d", { alpha: true });
+
+      const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+      // ----- Configuration you can tune -----
+      const CFG = {
+        sourceX: () => canvas.width * 0.5,
+        sourceY: () => canvas.height * 0.92,
+
+        baseEmission: prefersReduced ? 0 : 420,
+        burstiness: 0.35,
+        maxParticles: 3500,
+
+        rise: 400,
+        drag: 0.97,
+        turbulence: 280,
+        wind: 140,
+
+        lifeMin: 3.5,
+        lifeMax: 8.0,
+        radiusMin: 2,
+        radiusMax: 8,
+
+        bgFadeMin: 0.12,
+        bgFadeMax: 0.30,
+
+        timeScale: 1.6
+      };
+
+      // ----- Resize to HERO (canvas element size), with DPR -----
+      function resize() {
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+        canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+      }
+      resize();
+
+      // Resize when window changes, and also if hero layout changes after load
+      window.addEventListener("resize", resize);
+
+      // ----- Helpers -----
+      const rand = (a, b) => a + Math.random() * (b - a);
+      const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+      const lerp = (a, b, t) => a + (b - a) * t;
+
+      function hash2(x, y) {
+        let n = (x * 374761393 + y * 668265263) | 0;
+        n = (n ^ (n >> 13)) * 1274126177;
+        return ((n ^ (n >> 16)) >>> 0) / 4294967295;
+      }
+      function smoothstep(t){ return t * t * (3 - 2 * t); }
+      function noise2(x, y) {
+        const xi = Math.floor(x), yi = Math.floor(y);
+        const xf = x - xi, yf = y - yi;
+        const u = smoothstep(xf), v = smoothstep(yf);
+        const n00 = hash2(xi, yi);
+        const n10 = hash2(xi + 1, yi);
+        const n01 = hash2(xi, yi + 1);
+        const n11 = hash2(xi + 1, yi + 1);
+        const nx0 = lerp(n00, n10, u);
+        const nx1 = lerp(n01, n11, u);
+        return lerp(nx0, nx1, v);
+      }
+      function curl(x, y, t) {
+        const s = 0.0015;
+        const tt = t * 0.55;
+        const eps = 1.5;
+
+        const n1 = noise2((x + eps) * s + 17.1, (y) * s + tt);
+        const n2 = noise2((x - eps) * s + 17.1, (y) * s + tt);
+        const a = (n1 - n2) * 1.3;
+
+        const n3 = noise2((x) * s - 5.7, (y + eps) * s - tt);
+        const n4 = noise2((x) * s - 5.7, (y - eps) * s - tt);
+        const b = (n3 - n4) * 1.3;
+
+        return { x: b, y: -a };
+      }
+
+      // ----- Particle system -----
+      const particles = [];
+      let last = performance.now();
+      let emitCarry = 0;
+
+      let coldZones = [
+        { x: 0, y: 0, baseRadius: 160, radius: 160 },
+        { x: 0, y: 0, baseRadius: 160, radius: 160 }
+      ];
+
+      function spawn(count, nowSec) {
+        const sy = CFG.sourceY();
+        for (let i = 0; i < count; i++) {
+          if (particles.length >= CFG.maxParticles) return;
+
+          const numHotspots = 5;
+          let x;
+          if (Math.random() < 0.85) {
+            const h = Math.floor(Math.random() * numHotspots);
+            const n1 = (noise2(nowSec * 0.5 + h * 10, h * 5.7) - 0.5) * 2;
+            const n2a = (noise2(nowSec * 1.3 + h * 7.2, h * 3.2) - 0.5) * 2;
+            const n3 = (noise2(nowSec * 2.1 + h * 11.5, h * 8.9) - 0.5) * 2;
+            const hotspotX = canvas.width * ((h + 0.5) / numHotspots + (n1 * 0.1 + n2a * 0.08 + n3 * 0.06));
+            x = hotspotX + rand(-canvas.width * 0.12, canvas.width * 0.12);
+          } else {
+            x = rand(0, canvas.width);
+          }
+          x = clamp(x, 0, canvas.width);
+
+          const angle = rand(-Math.PI * 0.52, -Math.PI * 0.48);
+          const speed = rand(35, 165);
+
+          const fadeStartRatio = rand(0.3, 0.8);
+          const riseStrength = rand(0.7, 1.3);
+          const colorShift = rand(-0.6, 0.6);
+          const brightnessVariation = rand(0.8, 1.1);
+          const sizeVariation = rand(0.6, 1.4);
+          const oscillationFreq = rand(1.5, 4.0);
+          const isDarkSwirl = Math.random() < 0.15;
+
+          const baseR = rand(CFG.radiusMin, CFG.radiusMax) * sizeVariation;
+
+          particles.push({
+            x,
+            y: sy + rand(-10, 10) * (window.devicePixelRatio || 1),
+            vx: Math.cos(angle) * speed + rand(-22, 22),
+            vy: Math.sin(angle) * speed + rand(-10, 10),
+            r: baseR,
+            life: 0,
+            ttl: rand(CFG.lifeMin, CFG.lifeMax),
+            fadeStartRatio,
+            riseStrength,
+            colorShift,
+            brightnessVariation,
+            oscillationFreq,
+            isDarkSwirl,
+            proximityCount: 0,
+            mergedCount: 0,
+            trail: [{ x, y: sy }]
+          });
+        }
+      }
+
+      function drawParticle(p) {
+        const t = clamp(p.life / p.ttl, 0, 1);
+        const sizeOsc = 1 + Math.sin(p.life * p.oscillationFreq * 2 * Math.PI / 3) * 0.4;
+        const oscR = p.r * sizeOsc;
+
+        let r, g, b;
+        if (p.isDarkSwirl) {
+          const darkR = 94, darkG = 44, darkB = 16;
+          r = Math.floor(darkR + t * 40);
+          g = Math.floor(darkG + t * 30);
+          b = Math.floor(darkB + t * 25);
+        } else {
+          const colorProgress = clamp((t + p.colorShift) * 1.5, 0, 1);
+          const startR = p.mergedCount > 0 ? 222 : 213;
+          const startG = p.mergedCount > 0 ? 146 : 125;
+          const startB = p.mergedCount > 0 ? 59 : 47;
+          const midR = 182, midG = 78, midB = 32;
+          const endR = 122, endG = 55, endB = 21;
+
+          if (colorProgress < 0.5) {
+            const lp = colorProgress * 2;
+            r = Math.floor(lerp(startR, midR, lp));
+            g = Math.floor(lerp(startG, midG, lp));
+            b = Math.floor(lerp(startB, midB, lp));
+          } else {
+            const lp = (colorProgress - 0.5) * 2;
+            r = Math.floor(lerp(midR, endR, lp));
+            g = Math.floor(lerp(midG, endG, lp));
+            b = Math.floor(lerp(midB, endB, lp));
+          }
+
+          r = Math.floor(clamp(r * p.brightnessVariation, 0, 255));
+          g = Math.floor(clamp(g * p.brightnessVariation, 0, 255));
+          b = Math.floor(clamp(b * p.brightnessVariation, 0, 255));
+        }
+
+        const proximityInfluence = clamp(p.proximityCount / 10, 0, 1);
+        const flareOsc = Math.sin(p.life * 3 * Math.PI) * 0.4;
+        const fadeExp = 1.5 + proximityInfluence;
+        const baseFade = Math.pow(t, fadeExp);
+
+        let alpha;
+        if (t < p.fadeStartRatio) {
+          alpha = 0.65 + flareOsc * 0.15 * (1 - proximityInfluence);
+        } else {
+          const fp = (t - p.fadeStartRatio) / (1 - p.fadeStartRatio);
+          const fadedOut = baseFade * fp;
+          alpha = clamp((0.65 - fadedOut) + (flareOsc * 0.1 * (1 - fadedOut)), 0, 0.65);
+        }
+        if (p.isDarkSwirl) alpha *= 0.6;
+        if (p.mergedCount > 0) alpha = Math.min(alpha * (1 + p.mergedCount * 0.2), 0.85);
+
+        // glow
+        const ageRatio = t;
+        const glowOsc = 1 + Math.sin(p.life * p.oscillationFreq * 2 * Math.PI / 3) * 0.5;
+        const glowAlpha = alpha * Math.pow(1 - ageRatio, 2.8) * glowOsc;
+
+        const gg = ctx.createRadialGradient(p.x, p.y, oscR * 0.5, p.x, p.y, oscR * 3.5);
+        gg.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${glowAlpha * 0.9})`);
+        gg.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${glowAlpha * 0.5})`);
+        gg.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${glowAlpha * 0.15})`);
+        gg.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+        ctx.fillStyle = gg;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, oscR * 3.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, oscR, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function step(now) {
+        const raw = Math.min(0.033, (now - last) / 1000);
+        const dt = Math.min(0.06, raw * (CFG.timeScale || 1));
+        last = now;
+
+        const nowSec = now / 1000;
+
+        // fade previous frame (transparent canvas, so "smoke" accumulates over hero)
+        const bgFade = rand(CFG.bgFadeMin, CFG.bgFadeMax);
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = `rgba(0,0,0,${bgFade})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // emission
+        if (CFG.baseEmission > 0) {
+          const mod = 1 + (noise2(nowSec * 1.7, 13.37) - 0.5) * 2 * CFG.burstiness;
+          const emitRate = CFG.baseEmission * clamp(mod, 0.35, 1.85);
+          emitCarry += emitRate * dt;
+          const n = Math.floor(emitCarry);
+          emitCarry -= n;
+          spawn(n, nowSec);
+        }
+
+        // move cold zones
+        for (let z = 0; z < coldZones.length; z++) {
+          const zone = coldZones[z];
+          const coldX = canvas.width * (0.3 + z * 0.4 + (noise2(nowSec * 0.3 + z * 7.1, 11.1 + z * 3.3) - 0.5) * 1.0);
+          const coldY = canvas.height * (0.5 + (noise2(nowSec * 0.25 + z * 5.5, 22.2 + z * 4.4) - 0.5) * 1.3);
+          zone.x = clamp(coldX, 0, canvas.width);
+          zone.y = clamp(coldY, 0, canvas.height);
+          const sizeOsc = 0.5 + 0.5 * Math.sin(nowSec * 1.2 + z * Math.PI);
+          zone.radius = zone.baseRadius * (0.7 + sizeOsc * 0.6);
+        }
+
+        // physics
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.life += dt;
+
+          if (p.life >= p.ttl || p.y + p.r < -50 || p.x + p.r < -50 || p.x - p.r > canvas.width + 50) {
+            particles.splice(i, 1);
+            continue;
+          }
+
+          // cold zone kill
+          let inColdZone = false;
+          for (let z = 0; z < coldZones.length; z++) {
+            const zone = coldZones[z];
+            const dx = p.x - zone.x;
+            const dy = p.y - zone.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            const ang = Math.atan2(dy, dx);
+            const noisyRadius = zone.radius * (0.7 + noise2(Math.cos(ang) * 100 + nowSec * 0.5, Math.sin(ang) * 100) * 0.6);
+            if (dist < noisyRadius) { inColdZone = true; break; }
+          }
+          if (inColdZone) { particles.splice(i, 1); continue; }
+
+          // proximity count
+          let prox = 0;
+          const proxR = 50;
+          for (let j = particles.length - 1; j >= 0; j--) {
+            if (i === j) continue;
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < proxR) prox++;
+          }
+          p.proximityCount = prox;
+
+          const c = curl(p.x, p.y, nowSec);
+          const age = p.life / p.ttl;
+
+          const topBoundary = canvas.height * 0.1;
+          const reachesTop = p.y <= topBoundary;
+
+          const buoyFactor = reachesTop ? 0.3 : (1.0 - 0.55 * age);
+          const buoy = CFG.rise * buoyFactor * p.riseStrength;
+
+          const heightFactor = clamp(1 - p.y / canvas.height, 0, 1);
+          const turb = CFG.turbulence * (0.25 + 1.15 * heightFactor);
+
+          p.vx += (c.x * turb * 1.5 + CFG.wind * (0.6 + 0.4 * noise2(nowSec * 0.9, p.y * 0.002))) * dt;
+          p.vy += (-buoy + c.y * turb * 0.35) * dt;
+
+          p.vx *= Math.pow(CFG.drag, dt * 60);
+          p.vy *= Math.pow(CFG.drag, dt * 60);
+
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+        }
+
+        // draw
+        ctx.globalCompositeOperation = "source-over";
+        for (let i = 0; i < particles.length; i++) drawParticle(particles[i]);
+
+        requestAnimationFrame(step);
+      }
+
+      // start
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      requestAnimationFrame(step);
+    })();
+  </script>
 </body>
 </html>
