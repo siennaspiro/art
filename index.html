@@ -322,13 +322,15 @@
 
       // ----- Resize -----
       function resize() {
-        // Cap DPR at 2 — iPhone 14/15 Pro has DPR 3 which triples canvas pixels
         const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
         const rect = canvas.getBoundingClientRect();
+        // Guard: iOS can return 0 dimensions before first layout paint
+        if (!rect.width || !rect.height) return false;
         canvas.width  = Math.max(1, Math.floor(rect.width  * dpr));
         canvas.height = Math.max(1, Math.floor(rect.height * dpr));
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         lbm.init();
+        return true;
       }
       window.addEventListener("resize", resize);
       // iOS Safari fires a separate visualViewport resize when the toolbar hides/shows
@@ -699,13 +701,48 @@
         ctx.globalCompositeOperation = "source-over";
         for (let i = 0; i < particles.length; i++) drawParticle(particles[i]);
 
-        requestAnimationFrame(step);
+        // iOS Safari pauses rAF when the page is hidden (URL bar animating in,
+        // background tab, etc.). Stop queuing to avoid a stale loop;
+        // visibilitychange below restarts it.
+        if (document.hidden) {
+          animating = false;
+        } else {
+          requestAnimationFrame(step);
+        }
       }
 
-      // start — resize() calls lbm.init() internally
-      resize();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      requestAnimationFrame(step);
+      // ----- iOS-safe startup -----
+      let animating = false;
+      let started   = false;
+
+      // When iOS un-hides the page, the rAF loop has stopped — restart it.
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && !animating && started) {
+          animating = true;
+          last = performance.now();
+          requestAnimationFrame(step);
+        }
+      });
+
+      function start() {
+        if (started) return;
+        // Retry until iOS has committed layout and canvas has real dimensions
+        if (!resize()) { requestAnimationFrame(start); return; }
+        started = true;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!document.hidden) {
+          animating = true;
+          last = performance.now();
+          requestAnimationFrame(step);
+        }
+      }
+
+      // Defer past 'load' so iOS finishes its layout pass before we measure the canvas
+      if (document.readyState === 'complete') {
+        requestAnimationFrame(start);
+      } else {
+        window.addEventListener('load', () => requestAnimationFrame(start));
+      }
     })();
   </script>
 </body>
