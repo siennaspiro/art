@@ -1,43 +1,44 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
   <title>Sienna Spiro</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+    rel="stylesheet"
+  />
 
   <style>
     body {
       margin: 0;
       overflow-x: hidden;
-      font-family: 'Georgia', serif;
+      font-family: Georgia, serif;
       background: #0e0b08;
       color: #c4aa8a;
       line-height: 1.7;
-      /* Prevent iOS rubber-banding from revealing the black body behind the hero */
       overscroll-behavior: none;
     }
 
     .hero {
       position: relative;
       width: 100%;
-      /* Use svh (small viewport — excludes iOS toolbar) when supported,
-         fall back to the JS-set --vh custom property, then plain vh. */
       height: 70svh;
       height: calc(var(--vh, 1svh) * 70);
-
       background: #0a0706;
       overflow: hidden;
-
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Fire canvas sits behind everything in hero */
     canvas#fire {
       position: absolute;
       inset: 0;
@@ -47,12 +48,15 @@
       z-index: 0;
     }
 
-    /* Very soft edge vignette — no longer darkens the centre */
     .hero::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.28) 100%);
+      background: radial-gradient(
+        ellipse at center,
+        transparent 35%,
+        rgba(0, 0, 0, 0.28) 100%
+      );
       z-index: 1;
       pointer-events: none;
     }
@@ -69,7 +73,7 @@
     }
 
     .hero-text h1 {
-      font-family: 'Cormorant', 'Cormorant Garamond', Georgia, serif;
+      font-family: "Cormorant", "Cormorant Garamond", Georgia, serif;
       font-size: clamp(3.5rem, 14vw, 12rem);
       margin: 0;
       line-height: 0.88;
@@ -79,7 +83,6 @@
       position: relative;
     }
 
-    /* 'Sienna' — foreground: large, bright, shifted left */
     .t1 {
       display: block;
       font-style: italic;
@@ -92,7 +95,6 @@
       z-index: 2;
     }
 
-    /* 'Spiro' — background: smaller, dimmer, shifted right, softly blurred */
     .t2 {
       display: block;
       font-style: normal;
@@ -109,42 +111,55 @@
     }
 
     .subtitle {
-      font-family: 'Cormorant', Georgia, serif;
+      font-family: "Cormorant", Georgia, serif;
       font-size: clamp(0.55rem, 1.05vw, 0.82rem);
       font-style: italic;
       font-weight: 300;
       margin-top: 1.8rem;
-      letter-spacing: 0.40em;
+      letter-spacing: 0.4em;
       text-transform: uppercase;
       color: rgba(255, 188, 105, 0.36);
       text-shadow: none;
     }
 
-    /* Hairline editorial rules — foreground depth layer */
     .hero-rules {
       position: absolute;
       inset: 0;
       z-index: 4;
       pointer-events: none;
     }
+
     .hero-rules::before,
     .hero-rules::after {
-      content: '';
+      content: "";
       position: absolute;
       left: 5%;
       right: 5%;
       height: 1px;
     }
+
     .hero-rules::before {
       top: 15%;
-      background: linear-gradient(90deg, transparent, rgba(255,185,80,0.18) 20%, rgba(255,185,80,0.18) 80%, transparent);
-    }
-    .hero-rules::after {
-      bottom: 11%;
-      background: linear-gradient(90deg, transparent, rgba(255,150,45,0.11) 20%, rgba(255,150,45,0.11) 80%, transparent);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 185, 80, 0.18) 20%,
+        rgba(255, 185, 80, 0.18) 80%,
+        transparent
+      );
     }
 
-    /* Film-grain foreground texture — adds tactility and depth */
+    .hero-rules::after {
+      bottom: 11%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 150, 45, 0.11) 20%,
+        rgba(255, 150, 45, 0.11) 80%,
+        transparent
+      );
+    }
+
     .hero-grain {
       position: absolute;
       inset: 0;
@@ -156,7 +171,6 @@
       mix-blend-mode: overlay;
     }
 
-    /* Asymmetrical hero edge */
     .hero-burn {
       position: absolute;
       bottom: 0;
@@ -167,6 +181,7 @@
       pointer-events: none;
       line-height: 0;
     }
+
     .hero-burn svg {
       display: block;
       width: 100%;
@@ -203,14 +218,17 @@
       border-radius: 10px;
       font-weight: 600;
       letter-spacing: 0.02em;
-      transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.45);
+      transition:
+        transform 0.15s ease,
+        background-color 0.15s ease,
+        box-shadow 0.15s ease;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
     }
 
     .btn:hover {
       background-color: #1a110c;
       transform: translateY(-2px);
-      box-shadow: 0 14px 28px rgba(0,0,0,0.55);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.55);
     }
 
     footer {
@@ -222,32 +240,67 @@
     }
 
     @media screen and (max-width: 768px) {
-      .hero { min-height: calc(var(--vh, 1svh) * 50); }
-      .hero-text h1 { font-size: clamp(2.8rem, 17vw, 5.5rem); }
-      .t2 { letter-spacing: 0.2em; text-indent: 0.2em; }
-      .subtitle { font-size: 0.6rem; letter-spacing: 0.25em; margin-top: 1rem; }
+      .hero {
+        min-height: calc(var(--vh, 1svh) * 50);
+      }
+
+      .hero-text {
+        margin-bottom: 18vh;
+        mix-blend-mode: normal;
+      }
+
+      .hero-text h1 {
+        font-size: clamp(2.8rem, 17vw, 5.5rem);
+      }
+
+      .t2 {
+        letter-spacing: 0.2em;
+        text-indent: 0.2em;
+        filter: none;
+      }
+
+      .subtitle {
+        font-size: 0.6rem;
+        letter-spacing: 0.25em;
+        margin-top: 1rem;
+      }
     }
   </style>
 
   <script>
-    // Fix iOS Safari --vh so 70svh is always relative to the visible area,
-    // not the full screen including the hidden toolbar.
     function setVH() {
-      const vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      const vh =
+        (window.visualViewport
+          ? window.visualViewport.height
+          : window.innerHeight) * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
     }
+
     setVH();
-    window.addEventListener('resize', setVH);
-    if (window.visualViewport) window.visualViewport.addEventListener('resize', setVH);
+
+    let vhResizeRaf = 0;
+    function scheduleVHUpdate() {
+      if (vhResizeRaf) return;
+      vhResizeRaf = requestAnimationFrame(() => {
+        vhResizeRaf = 0;
+        setVH();
+      });
+    }
+
+    window.addEventListener("resize", scheduleVHUpdate);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", scheduleVHUpdate);
+    }
   </script>
 
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-142MQVDRL2"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-142MQVDRL2');
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-142MQVDRL2");
   </script>
 </head>
 
@@ -255,16 +308,24 @@
   <header class="hero">
     <canvas id="fire"></canvas>
     <div class="hero-rules" aria-hidden="true"></div>
+
     <div class="hero-text">
       <h1>
         <span class="t1">Sienna</span>
         <span class="t2">Spiro</span>
       </h1>
     </div>
-    <!-- Asymmetrical edge divider -->
+
     <div class="hero-burn" aria-hidden="true">
-      <svg viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#0e0b08" d="M0,54 C240,72 860,6 1440,28 L1440,65 L0,65 Z"/>
+      <svg
+        viewBox="0 0 1440 65"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill="#0e0b08"
+          d="M0,54 C240,72 860,6 1440,28 L1440,65 L0,65 Z"
+        />
       </svg>
     </div>
   </header>
@@ -274,15 +335,25 @@
       <blockquote>
         <p><em>“Born of earth, shaped by flame, and carried on breath.”</em></p>
       </blockquote>
+
       <p>
-        The name <strong>Sienna</strong> comes from <em>terra di Siena</em> — the clay-rich soil of Tuscany, where iron and manganese oxide stain the land in ochres and burnt reds.
-        But long before it colored canvas, it mirrored the skies of ancient Italy. In the aftermath of Rome’s great fires, the air would have swirled with smoke, casting the heavens in hues of raw and burnt sienna.
+        The name <strong>Sienna</strong> comes from <em>terra di Siena</em> —
+        the clay-rich soil of Tuscany, where iron and manganese oxide stain the
+        land in ochres and burnt reds. But long before it colored canvas, it
+        mirrored the skies of ancient Italy. In the aftermath of Rome’s great
+        fires, the air would have swirled with smoke, casting the heavens in
+        hues of raw and burnt sienna.
       </p>
+
       <p>
-        <strong>Spiro</strong>, from Latin <em>spīrāre</em> (“to breathe”) and <em>spīra</em> (Greek <em>speîra</em>, “coil”), evokes both life and motion — breath spiraling like smoke through time.
+        <strong>Spiro</strong>, from Latin <em>spīrāre</em> (“to breathe”) and
+        <em>spīra</em> (Greek <em>speîra</em>, “coil”), evokes both life and
+        motion — breath spiraling like smoke through time.
       </p>
+
       <p>
-        This project exists at that intersection: earth and air, pigment and pulse, history and abstraction.
+        This project exists at that intersection: earth and air, pigment and
+        pulse, history and abstraction.
       </p>
 
       <a href="gallery.html" class="btn">View Art Gallery</a>
@@ -296,134 +367,17 @@
   <script>
     (() => {
       const canvas = document.getElementById("fire");
-      const ctx    = canvas.getContext("2d", { alpha: false });
+      const ctx = canvas.getContext("2d", { alpha: false });
 
-      const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+      const prefersReduced = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)"
+      )?.matches;
+
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-      const rand  = (a, b) => a + Math.random() * (b - a);
-      const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
-      const lerp  = (a, b, t) => a + (b - a) * t;
-
-      // =====================================================================
-      // MOBILE PATH — lightweight sine-noise fire, no LBM simulation
-      // =====================================================================
-      if (isMobile) {
-        const MAX  = 120;
-        const EMIT = prefersReduced ? 0 : 28;  // particles/sec
-        const particles = [];
-        let last = 0, noiseT = 0;
-
-        function resize() {
-          const rect = canvas.getBoundingClientRect();
-          if (!rect.width || !rect.height) return false;
-          // DPR=1 on mobile: avoids 4× pixel fill cost on Retina screens
-          canvas.width  = Math.floor(rect.width);
-          canvas.height = Math.floor(rect.height);
-          return true;
-        }
-        window.addEventListener("resize", resize);
-        if (window.visualViewport) window.visualViewport.addEventListener("resize", resize);
-
-        function spawn() {
-          if (particles.length >= MAX) return;
-          const x = rand(0, canvas.width);
-          // Approximate SVG burn-edge position (~bottom 8–12% of canvas)
-          const y = canvas.height * rand(0.88, 0.96);
-          particles.push({ x, y,
-            vx: rand(-18, 18), vy: rand(-90, -55),
-            r:  rand(3, 10),   life: 0,
-            ttl: rand(2.8, 5.5), fsr: rand(0.35, 0.75),
-          });
-        }
-
-        function draw(p) {
-          const age = clamp(p.life / p.ttl, 0, 1);
-          // warm orange→dark-red gradient without any per-frame trig
-          const rv = Math.floor(lerp(220, 110, age));
-          const gv = Math.floor(lerp(105,  38, age));
-          const alpha = age < p.fsr
-            ? 0.68
-            : 0.68 * (1 - (age - p.fsr) / (1 - p.fsr));
-          ctx.fillStyle = `rgba(${rv},${gv},18,${alpha})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r * (1 + age * 0.6), 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        function frame(now) {
-          const dt = Math.min(0.05, (now - last) / 1000);
-          last = now;
-          noiseT += dt;
-
-          ctx.fillStyle = "rgba(10,7,6,0.17)";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          if (EMIT > 0) {
-            const n = Math.floor(EMIT * dt + Math.random());
-            for (let i = 0; i < n; i++) spawn();
-          }
-
-          const drag = Math.pow(0.975, dt * 60); // compute once, apply per particle
-
-          for (let i = particles.length - 1; i >= 0; i--) {
-            const p = particles[i];
-            p.life += dt;
-            if (p.life >= p.ttl || p.y < -30) { particles.splice(i, 1); continue; }
-
-            // Cheap sine turbulence: 2 sin calls per particle total
-            const nx   = p.x / canvas.width;
-            const ny   = p.y / canvas.height;
-            const curl = Math.sin(nx * 5.1 + ny * 3.7 + noiseT * 1.3) * 0.055;
-            const wind = Math.sin(nx * 3.3 + noiseT * 0.8) * 0.032;
-
-            p.vx += (curl * 2200 + wind * 900) * dt;
-            p.vy += -190 * dt;   // buoyancy
-            p.vx *= drag;
-            p.vy *= drag;
-            p.x  += p.vx * dt;
-            p.y  += p.vy * dt;
-
-            draw(p);
-          }
-
-          if (!document.hidden) requestAnimationFrame(frame);
-        }
-
-        let animating = false, started = false;
-
-        document.addEventListener('visibilitychange', () => {
-          if (!document.hidden && !animating && started) {
-            animating = true; last = performance.now();
-            requestAnimationFrame(frame);
-          }
-        });
-
-        function start() {
-          if (started) return;
-          if (!resize()) { requestAnimationFrame(start); return; }
-          started = true;
-          ctx.fillStyle = "#0a0706";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          if (!document.hidden) {
-            animating = true; last = performance.now();
-            requestAnimationFrame(frame);
-          }
-        }
-
-        if (document.readyState === 'complete') requestAnimationFrame(start);
-        else window.addEventListener('load', () => requestAnimationFrame(start));
-        return; // skip desktop code entirely
-      }
-
-      // =====================================================================
-      // DESKTOP PATH — full Lattice-Boltzmann fluid + particle fire
-      // =====================================================================
-
-      // ----- Configuration -----
       const CFG = {
-        baseEmission: prefersReduced ? 0 : 280,
-        maxParticles: 3000,
+        baseEmission: prefersReduced ? 0 : isMobile ? 34 : 220,
+        maxParticles: isMobile ? 220 : 2200,
         rise: 300,
         drag: 0.975,
         lifeMin: 3.2,
@@ -435,32 +389,67 @@
         timeScale: 0.7,
         curlScale: 9000,
         lbmInfluence: 1800,
-        lbmSteps: 20,
+        lbmSteps: isMobile ? 2 : 12,
       };
 
-      // ----- Resize -----
+      let renderDpr = 1;
+      let resizeRaf = 0;
+      let lastCssWidth = 0;
+      let lastCssHeight = 0;
+
+      function scheduleResize() {
+        if (resizeRaf) return;
+        resizeRaf = requestAnimationFrame(() => {
+          resizeRaf = 0;
+          resize();
+        });
+      }
+
       function resize() {
-        const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+        renderDpr = isMobile
+          ? 1
+          : Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+
         const rect = canvas.getBoundingClientRect();
-        // Guard: iOS can return 0 dimensions before first layout paint
         if (!rect.width || !rect.height) return false;
-        canvas.width  = Math.max(1, Math.floor(rect.width  * dpr));
-        canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+
+        const cssWidth = Math.floor(rect.width);
+        const cssHeight = Math.floor(rect.height);
+        const newW = Math.max(1, Math.floor(rect.width * renderDpr));
+        const newH = Math.max(1, Math.floor(rect.height * renderDpr));
+
+        const sizeChanged =
+          canvas.width !== newW ||
+          canvas.height !== newH ||
+          cssWidth !== lastCssWidth ||
+          cssHeight !== lastCssHeight;
+
+        if (!sizeChanged) return true;
+
+        lastCssWidth = cssWidth;
+        lastCssHeight = cssHeight;
+        canvas.width = newW;
+        canvas.height = newH;
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         lbm.init();
         return true;
       }
-      window.addEventListener("resize", resize);
-      // iOS Safari fires a separate visualViewport resize when the toolbar hides/shows
-      if (window.visualViewport) window.visualViewport.addEventListener("resize", resize);
 
-      // =====================================================================
-      // Lattice-Boltzmann fluid simulation (D2Q9)
-      // Runs on a 200×80 grid matching the Python reference code.
-      // =====================================================================
+      window.addEventListener("resize", scheduleResize);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", scheduleResize);
+      }
+
+      const rand = (a, b) => a + Math.random() * (b - a);
+      const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+      const lerp = (a, b, t) => a + (b - a) * t;
+
       const lbm = (() => {
-        const W = 200, H = 80;
-        const four9ths = 4/9, one9th = 1/9, one36th = 1/36;
+        const W = 200;
+        const H = 80;
+        const four9ths = 4 / 9;
+        const one9th = 1 / 9;
+        const one36th = 1 / 36;
         const viscosity = 0.02;
         const omega = 1 / (3 * viscosity + 0.5);
         const u0 = 0.1;
@@ -485,137 +474,200 @@
         }
 
         const mkFloat = () => new Float32Array(W * H);
-        const mkBool  = () => new Uint8Array(W * H);
+        const mkBool = () => new Uint8Array(W * H);
 
         function initBarrier() {
           barrier = mkBool();
-          // Barriers staggered at different heights so vortex wakes span the
-          // full domain height, producing turbulence across the whole canvas.
           const configs = [
-            { bx: Math.floor(W*0.10), by: Math.floor(H*0.30) },
-            { bx: Math.floor(W*0.28), by: Math.floor(H*0.65) },
-            { bx: Math.floor(W*0.46), by: Math.floor(H*0.42) },
-            { bx: Math.floor(W*0.64), by: Math.floor(H*0.72) },
-            { bx: Math.floor(W*0.82), by: Math.floor(H*0.35) },
+            { bx: Math.floor(W * 0.1), by: Math.floor(H * 0.3) },
+            { bx: Math.floor(W * 0.28), by: Math.floor(H * 0.65) },
+            { bx: Math.floor(W * 0.46), by: Math.floor(H * 0.42) },
+            { bx: Math.floor(W * 0.64), by: Math.floor(H * 0.72) },
+            { bx: Math.floor(W * 0.82), by: Math.floor(H * 0.35) },
           ];
+
           for (const { bx, by } of configs) {
             for (let y = by - 6; y < by + 6; y++) {
               if (y >= 0 && y < H) barrier[idx(bx, y)] = 1;
             }
           }
-          // Correct signs: barrierN = sites NORTH (+y) of barrier cells
-          barrierN  = new Uint8Array(roll1(barrier, mkBool(),  0,  1));
-          barrierS  = new Uint8Array(roll1(barrier, mkBool(),  0, -1));
-          barrierE  = new Uint8Array(roll1(barrier, mkBool(),  1,  0));
-          barrierW  = new Uint8Array(roll1(barrier, mkBool(), -1,  0));
+
+          barrierN = new Uint8Array(roll1(barrier, mkBool(), 0, 1));
+          barrierS = new Uint8Array(roll1(barrier, mkBool(), 0, -1));
+          barrierE = new Uint8Array(roll1(barrier, mkBool(), 1, 0));
+          barrierW = new Uint8Array(roll1(barrier, mkBool(), -1, 0));
+
           const tmpN = new Uint8Array(barrierN);
           const tmpS = new Uint8Array(barrierS);
-          barrierNE = new Uint8Array(roll1(tmpN, mkBool(),  1, 0));
+          barrierNE = new Uint8Array(roll1(tmpN, mkBool(), 1, 0));
           barrierNW = new Uint8Array(roll1(tmpN, mkBool(), -1, 0));
-          barrierSE = new Uint8Array(roll1(tmpS, mkBool(),  1, 0));
+          barrierSE = new Uint8Array(roll1(tmpS, mkBool(), 1, 0));
           barrierSW = new Uint8Array(roll1(tmpS, mkBool(), -1, 0));
         }
 
         function init() {
-          n0  = mkFloat(); nN  = mkFloat(); nS  = mkFloat();
-          nE  = mkFloat(); nW  = mkFloat();
-          nNE = mkFloat(); nNW = mkFloat(); nSE = mkFloat(); nSW = mkFloat();
-          rho = mkFloat(); ux  = mkFloat(); uy  = mkFloat();
+          n0 = mkFloat();
+          nN = mkFloat();
+          nS = mkFloat();
+          nE = mkFloat();
+          nW = mkFloat();
+          nNE = mkFloat();
+          nNW = mkFloat();
+          nSE = mkFloat();
+          nSW = mkFloat();
+          rho = mkFloat();
+          ux = mkFloat();
+          uy = mkFloat();
 
-          const base     = 1 - 1.5 * u0 * u0;
-          const eastBase = 1 + 3*u0 + 4.5*u0*u0 - 1.5*u0*u0;
-          const westBase = 1 - 3*u0 + 4.5*u0*u0 - 1.5*u0*u0;
+          const base = 1 - 1.5 * u0 * u0;
+          const eastBase = 1 + 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0;
+          const westBase = 1 - 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0;
 
           for (let i = 0; i < W * H; i++) {
-            n0[i]  = four9ths * base;
-            nN[i]  = one9th  * base;
-            nS[i]  = one9th  * base;
-            nE[i]  = one9th  * eastBase;
-            nW[i]  = one9th  * westBase;
+            n0[i] = four9ths * base;
+            nN[i] = one9th * base;
+            nS[i] = one9th * base;
+            nE[i] = one9th * eastBase;
+            nW[i] = one9th * westBase;
             nNE[i] = one36th * eastBase;
             nSE[i] = one36th * eastBase;
             nNW[i] = one36th * westBase;
             nSW[i] = one36th * westBase;
-            rho[i] = n0[i]+nN[i]+nS[i]+nE[i]+nW[i]+nNE[i]+nSE[i]+nNW[i]+nSW[i];
-            ux[i]  = (nE[i]+nNE[i]+nSE[i]-nW[i]-nNW[i]-nSW[i]) / rho[i];
-            uy[i]  = (nN[i]+nNE[i]+nNW[i]-nS[i]-nSE[i]-nSW[i]) / rho[i];
+            rho[i] =
+              n0[i] +
+              nN[i] +
+              nS[i] +
+              nE[i] +
+              nW[i] +
+              nNE[i] +
+              nSE[i] +
+              nNW[i] +
+              nSW[i];
+            ux[i] =
+              (nE[i] + nNE[i] + nSE[i] - nW[i] - nNW[i] - nSW[i]) / rho[i];
+            uy[i] =
+              (nN[i] + nNE[i] + nNW[i] - nS[i] - nSE[i] - nSW[i]) / rho[i];
           }
+
           initBarrier();
         }
 
         let _nN, _nS, _nE, _nW, _nNE, _nNW, _nSE, _nSW;
+
         function ensureTemp() {
-          if (!_nN) {
-            _nN=mkFloat();_nS=mkFloat();_nE=mkFloat();_nW=mkFloat();
-            _nNE=mkFloat();_nNW=mkFloat();_nSE=mkFloat();_nSW=mkFloat();
-          }
+          if (_nN) return;
+          _nN = mkFloat();
+          _nS = mkFloat();
+          _nE = mkFloat();
+          _nW = mkFloat();
+          _nNE = mkFloat();
+          _nNW = mkFloat();
+          _nSE = mkFloat();
+          _nSW = mkFloat();
         }
 
         function stream() {
           ensureTemp();
-          // roll1(src, dst, shiftX, shiftY): dst[x,y] = src[x-shiftX, y-shiftY]
-          // shiftX=+1 → value at x-1 moves to x = eastward propagation
-          roll1(nN,  _nN,   0,  1);
-          roll1(nNE, _nNE,  1,  1);
-          roll1(nNW, _nNW, -1,  1);
-          roll1(nS,  _nS,   0, -1);
-          roll1(nSE, _nSE,  1, -1);
+
+          roll1(nN, _nN, 0, 1);
+          roll1(nNE, _nNE, 1, 1);
+          roll1(nNW, _nNW, -1, 1);
+          roll1(nS, _nS, 0, -1);
+          roll1(nSE, _nSE, 1, -1);
           roll1(nSW, _nSW, -1, -1);
-          roll1(nE,  _nE,   1,  0);
-          roll1(nW,  _nW,  -1,  0);
+          roll1(nE, _nE, 1, 0);
+          roll1(nW, _nW, -1, 0);
 
-          [nN,_nN]=[_nN,nN]; [nS,_nS]=[_nS,nS];
-          [nE,_nE]=[_nE,nE]; [nW,_nW]=[_nW,nW];
-          [nNE,_nNE]=[_nNE,nNE]; [nNW,_nNW]=[_nNW,nNW];
-          [nSE,_nSE]=[_nSE,nSE]; [nSW,_nSW]=[_nSW,nSW];
+          [nN, _nN] = [_nN, nN];
+          [nS, _nS] = [_nS, nS];
+          [nE, _nE] = [_nE, nE];
+          [nW, _nW] = [_nW, nW];
+          [nNE, _nNE] = [_nNE, nNE];
+          [nNW, _nNW] = [_nNW, nNW];
+          [nSE, _nSE] = [_nSE, nSE];
+          [nSW, _nSW] = [_nSW, nSW];
 
-          // Bounce-back: read from the actual barrier cell one step away
           for (let y = 0; y < H; y++) {
             for (let x = 0; x < W; x++) {
               const i = idx(x, y);
-              if (barrierN[i])  nN[i]  = nS[idx(x,          (y-1+H)%H)];
-              if (barrierS[i])  nS[i]  = nN[idx(x,          (y+1)%H  )];
-              if (barrierE[i])  nE[i]  = nW[idx((x-1+W)%W,   y       )];
-              if (barrierW[i])  nW[i]  = nE[idx((x+1)%W,     y       )];
-              if (barrierNE[i]) nNE[i] = nSW[idx((x-1+W)%W, (y-1+H)%H)];
-              if (barrierNW[i]) nNW[i] = nSE[idx((x+1)%W,   (y-1+H)%H)];
-              if (barrierSE[i]) nSE[i] = nNW[idx((x-1+W)%W, (y+1)%H  )];
-              if (barrierSW[i]) nSW[i] = nNE[idx((x+1)%W,   (y+1)%H  )];
+              if (barrierN[i]) nN[i] = nS[idx(x, (y - 1 + H) % H)];
+              if (barrierS[i]) nS[i] = nN[idx(x, (y + 1) % H)];
+              if (barrierE[i]) nE[i] = nW[idx((x - 1 + W) % W, y)];
+              if (barrierW[i]) nW[i] = nE[idx((x + 1) % W, y)];
+              if (barrierNE[i])
+                nNE[i] = nSW[idx((x - 1 + W) % W, (y - 1 + H) % H)];
+              if (barrierNW[i])
+                nNW[i] = nSE[idx((x + 1) % W, (y - 1 + H) % H)];
+              if (barrierSE[i])
+                nSE[i] = nNW[idx((x - 1 + W) % W, (y + 1) % H)];
+              if (barrierSW[i])
+                nSW[i] = nNE[idx((x + 1) % W, (y + 1) % H)];
             }
           }
         }
 
         function collide() {
-          const eIn  = one9th  * (1 + 3*u0 + 4.5*u0*u0 - 1.5*u0*u0);
-          const wIn  = one9th  * (1 - 3*u0 + 4.5*u0*u0 - 1.5*u0*u0);
-          const neIn = one36th * (1 + 3*u0 + 4.5*u0*u0 - 1.5*u0*u0);
-          const nwIn = one36th * (1 - 3*u0 + 4.5*u0*u0 - 1.5*u0*u0);
+          const eIn = one9th * (1 + 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0);
+          const wIn = one9th * (1 - 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0);
+          const neIn = one36th * (1 + 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0);
+          const nwIn = one36th * (1 - 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0);
 
           for (let y = 0; y < H; y++) {
             for (let x = 0; x < W; x++) {
               const i = idx(x, y);
-              const r = n0[i]+nN[i]+nS[i]+nE[i]+nW[i]+nNE[i]+nSE[i]+nNW[i]+nSW[i];
+              const r =
+                n0[i] +
+                nN[i] +
+                nS[i] +
+                nE[i] +
+                nW[i] +
+                nNE[i] +
+                nSE[i] +
+                nNW[i] +
+                nSW[i];
+
               rho[i] = r;
-              const vx = (nE[i]+nNE[i]+nSE[i]-nW[i]-nNW[i]-nSW[i]) / r;
-              const vy = (nN[i]+nNE[i]+nNW[i]-nS[i]-nSE[i]-nSW[i]) / r;
-              ux[i] = vx; uy[i] = vy;
 
-              const ux2=vx*vx, uy2=vy*vy, u2=ux2+uy2;
-              const omu215 = 1 - 1.5*u2;
-              const uxuy = vx*vy, om1 = 1-omega;
+              const vx =
+                (nE[i] + nNE[i] + nSE[i] - nW[i] - nNW[i] - nSW[i]) / r;
+              const vy =
+                (nN[i] + nNE[i] + nNW[i] - nS[i] - nSE[i] - nSW[i]) / r;
 
-              n0[i]  = om1*n0[i]  + omega*four9ths*r*omu215;
-              nN[i]  = om1*nN[i]  + omega*one9th  *r*(omu215+3*vy+4.5*uy2);
-              nS[i]  = om1*nS[i]  + omega*one9th  *r*(omu215-3*vy+4.5*uy2);
-              nE[i]  = om1*nE[i]  + omega*one9th  *r*(omu215+3*vx+4.5*ux2);
-              nW[i]  = om1*nW[i]  + omega*one9th  *r*(omu215-3*vx+4.5*ux2);
-              nNE[i] = om1*nNE[i] + omega*one36th *r*(omu215+3*(vx+vy)+4.5*(u2+2*uxuy));
-              nNW[i] = om1*nNW[i] + omega*one36th *r*(omu215+3*(-vx+vy)+4.5*(u2-2*uxuy));
-              nSE[i] = om1*nSE[i] + omega*one36th *r*(omu215+3*(vx-vy)+4.5*(u2-2*uxuy));
-              nSW[i] = om1*nSW[i] + omega*one36th *r*(omu215+3*(-vx-vy)+4.5*(u2+2*uxuy));
+              ux[i] = vx;
+              uy[i] = vy;
+
+              const ux2 = vx * vx;
+              const uy2 = vy * vy;
+              const u2 = ux2 + uy2;
+              const omu215 = 1 - 1.5 * u2;
+              const uxuy = vx * vy;
+              const om1 = 1 - omega;
+
+              n0[i] = om1 * n0[i] + omega * four9ths * r * omu215;
+              nN[i] = om1 * nN[i] + omega * one9th * r * (omu215 + 3 * vy + 4.5 * uy2);
+              nS[i] = om1 * nS[i] + omega * one9th * r * (omu215 - 3 * vy + 4.5 * uy2);
+              nE[i] = om1 * nE[i] + omega * one9th * r * (omu215 + 3 * vx + 4.5 * ux2);
+              nW[i] = om1 * nW[i] + omega * one9th * r * (omu215 - 3 * vx + 4.5 * ux2);
+              nNE[i] =
+                om1 * nNE[i] +
+                omega * one36th * r * (omu215 + 3 * (vx + vy) + 4.5 * (u2 + 2 * uxuy));
+              nNW[i] =
+                om1 * nNW[i] +
+                omega * one36th * r * (omu215 + 3 * (-vx + vy) + 4.5 * (u2 - 2 * uxuy));
+              nSE[i] =
+                om1 * nSE[i] +
+                omega * one36th * r * (omu215 + 3 * (vx - vy) + 4.5 * (u2 - 2 * uxuy));
+              nSW[i] =
+                om1 * nSW[i] +
+                omega * one36th * r * (omu215 + 3 * (-vx - vy) + 4.5 * (u2 + 2 * uxuy));
 
               if (x === 0) {
-                nE[i]=eIn; nW[i]=wIn; nNE[i]=neIn; nSE[i]=neIn; nNW[i]=nwIn; nSW[i]=nwIn;
+                nE[i] = eIn;
+                nW[i] = wIn;
+                nNE[i] = neIn;
+                nSE[i] = neIn;
+                nNW[i] = nwIn;
+                nSW[i] = nwIn;
               }
             }
           }
@@ -623,27 +675,45 @@
 
         function computeCurlField() {
           if (!curlField) curlField = mkFloat();
+
           for (let y = 0; y < H; y++) {
             for (let x = 0; x < W; x++) {
-              const xp=(x+1)%W, xm=(x-1+W)%W;
-              const yp=(y+1)%H, ym=(y-1+H)%H;
-              curlField[idx(x,y)] = (uy[idx(xp,y)]-uy[idx(xm,y)]) - (ux[idx(x,yp)]-ux[idx(x,ym)]);
+              const xp = (x + 1) % W;
+              const xm = (x - 1 + W) % W;
+              const yp = (y + 1) % H;
+              const ym = (y - 1 + H) % H;
+
+              curlField[idx(x, y)] =
+                (uy[idx(xp, y)] - uy[idx(xm, y)]) -
+                (ux[idx(x, yp)] - ux[idx(x, ym)]);
             }
           }
         }
 
         function bilinear(field, px, py) {
-          const gx = (px / canvas.width)  * (W - 1);
+          const gx = (px / canvas.width) * (W - 1);
           const gy = ((canvas.height - py) / canvas.height) * (H - 1);
-          const x0 = clamp(Math.floor(gx), 0, W-2);
-          const y0 = clamp(Math.floor(gy), 0, H-2);
-          const fx = gx-x0, fy = gy-y0;
-          const i00=idx(x0,y0), i10=idx(x0+1,y0), i01=idx(x0,y0+1), i11=idx(x0+1,y0+1);
-          return lerp(lerp(field[i00],field[i10],fx), lerp(field[i01],field[i11],fx), fy);
+          const x0 = clamp(Math.floor(gx), 0, W - 2);
+          const y0 = clamp(Math.floor(gy), 0, H - 2);
+          const fx = gx - x0;
+          const fy = gy - y0;
+          const i00 = idx(x0, y0);
+          const i10 = idx(x0 + 1, y0);
+          const i01 = idx(x0, y0 + 1);
+          const i11 = idx(x0 + 1, y0 + 1);
+
+          return lerp(
+            lerp(field[i00], field[i10], fx),
+            lerp(field[i01], field[i11], fx),
+            fy
+          );
         }
 
         function sampleVelocity(px, py) {
-          return { vx: bilinear(ux, px, py), vy: bilinear(uy, px, py) };
+          return {
+            vx: bilinear(ux, px, py),
+            vy: bilinear(uy, px, py),
+          };
         }
 
         function sampleCurl(px, py) {
@@ -651,58 +721,72 @@
         }
 
         function step(stepsPerFrame) {
-          for (let s = 0; s < stepsPerFrame; s++) { stream(); collide(); }
+          for (let s = 0; s < stepsPerFrame; s++) {
+            stream();
+            collide();
+          }
           computeCurlField();
         }
 
         return { init, step, sampleVelocity, sampleCurl };
       })();
 
-      // Asymmetric spawn edge — mirrors the .hero-burn SVG Bézier
-      // SVG path: M0,54 C240,72 860,6 1440,28  (viewBox 0 0 1440 65)
-      // P0x=0, P1x=240, P2x=860, P3x=1440
-      const EDGE_P1X=240, EDGE_P1Y=72, EDGE_P2X=860, EDGE_P2Y=6;
-      const EDGE_P0Y=54,  EDGE_P3Y=28, EDGE_SVG_H=65;
+      const EDGE_P1X = 240;
+      const EDGE_P1Y = 72;
+      const EDGE_P2X = 860;
+      const EDGE_P2Y = 6;
+      const EDGE_P0Y = 54;
+      const EDGE_P3Y = 28;
+      const EDGE_SVG_H = 65;
 
-      // Returns the exact canvas-pixel y where the SVG white edge begins
-      // for a given canvas-pixel x. Mirrors the .hero-burn SVG Bézier precisely
-      // so particles spawn right on the transition line with no dark gap.
-      // SVG div is EDGE_SVG_H css-px tall; canvas pixels = css-px * dpr.
       function edgeY(canvasX) {
-        const dpr   = window.devicePixelRatio || 1;
-        const svgX  = (canvasX / canvas.width) * 1440;
-        // Solve Bx(t) = svgX via Newton's method
+        const svgX = (canvasX / canvas.width) * 1440;
+
         let t = svgX / 1440;
         for (let k = 0; k < 8; k++) {
           const mt = 1 - t;
-          const bx  = 3*mt*mt*t*EDGE_P1X + 3*mt*t*t*EDGE_P2X + t*t*t*1440;
-          const dbx = 3*mt*mt*EDGE_P1X   + 6*mt*t*(EDGE_P2X-EDGE_P1X) + 3*t*t*(1440-EDGE_P2X);
+          const bx =
+            3 * mt * mt * t * EDGE_P1X +
+            3 * mt * t * t * EDGE_P2X +
+            t * t * t * 1440;
+          const dbx =
+            3 * mt * mt * EDGE_P1X +
+            6 * mt * t * (EDGE_P2X - EDGE_P1X) +
+            3 * t * t * (1440 - EDGE_P2X);
+
           if (Math.abs(dbx) < 1e-6) break;
           t -= (bx - svgX) / dbx;
-          t  = clamp(t, 0, 1);
+          t = clamp(t, 0, 1);
         }
+
         const mt = 1 - t;
-        const by = mt*mt*mt*EDGE_P0Y + 3*mt*mt*t*EDGE_P1Y + 3*mt*t*t*EDGE_P2Y + t*t*t*EDGE_P3Y;
-        // Exact canvas y: SVG div top is (canvas.height - EDGE_SVG_H*dpr),
-        // curve sits (by/EDGE_SVG_H) of the way down through that div.
-        return canvas.height - (EDGE_SVG_H - by) * dpr;
+        const by =
+          mt * mt * mt * EDGE_P0Y +
+          3 * mt * mt * t * EDGE_P1Y +
+          3 * mt * t * t * EDGE_P2Y +
+          t * t * t * EDGE_P3Y;
+
+        return canvas.height - (EDGE_SVG_H - by) * renderDpr;
       }
 
-      // ----- Particle system -----
       const particles = [];
       let last = performance.now();
       let emitCarry = 0;
+      let animating = false;
+      let started = false;
 
       function spawn(count) {
         for (let i = 0; i < count; i++) {
           if (particles.length >= CFG.maxParticles) return;
+
           const x = rand(0, canvas.width);
           const sy = edgeY(x);
           const angle = rand(-Math.PI * 0.52, -Math.PI * 0.48);
           const speed = rand(30, 140);
+
           particles.push({
             x,
-            y: sy + rand(-8, 8) * (window.devicePixelRatio || 1),
+            y: sy + rand(-8, 8) * renderDpr,
             vx: Math.cos(angle) * speed + rand(-20, 20),
             vy: Math.sin(angle) * speed + rand(-10, 10),
             r: rand(CFG.radiusMin, CFG.radiusMax) * rand(0.6, 1.4),
@@ -714,63 +798,97 @@
             brightnessVariation: rand(0.8, 1.1),
             oscillationFreq: rand(1.5, 4.0),
             isDarkSwirl: Math.random() < 0.15,
-            mergedCount: 0,
           });
         }
       }
 
       function drawParticle(p) {
         const t = clamp(p.life / p.ttl, 0, 1);
-        const sizeOsc = 1 + Math.sin(p.life * p.oscillationFreq * 2 * Math.PI / 3) * 0.4;
+        const sizeOsc =
+          1 + Math.sin((p.life * p.oscillationFreq * 2 * Math.PI) / 3) * 0.4;
         const oscR = p.r * sizeOsc;
 
         let r, g, b;
+
         if (p.isDarkSwirl) {
-          r = Math.floor(94  + t * 40);
-          g = Math.floor(44  + t * 30);
-          b = Math.floor(16  + t * 25);
+          r = Math.floor(94 + t * 40);
+          g = Math.floor(44 + t * 30);
+          b = Math.floor(16 + t * 25);
         } else {
           const cp = clamp((t + p.colorShift) * 1.5, 0, 1);
-          const sR=213, sG=125, sB=47, mR=182, mG=78, mB=32, eR=122, eG=55, eB=21;
+          const sR = 213, sG = 125, sB = 47;
+          const mR = 182, mG = 78, mB = 32;
+          const eR = 122, eG = 55, eB = 21;
+
           if (cp < 0.5) {
             const lp = cp * 2;
-            r=Math.floor(lerp(sR,mR,lp)); g=Math.floor(lerp(sG,mG,lp)); b=Math.floor(lerp(sB,mB,lp));
+            r = Math.floor(lerp(sR, mR, lp));
+            g = Math.floor(lerp(sG, mG, lp));
+            b = Math.floor(lerp(sB, mB, lp));
           } else {
-            const lp = (cp-0.5)*2;
-            r=Math.floor(lerp(mR,eR,lp)); g=Math.floor(lerp(mG,eG,lp)); b=Math.floor(lerp(mB,eB,lp));
+            const lp = (cp - 0.5) * 2;
+            r = Math.floor(lerp(mR, eR, lp));
+            g = Math.floor(lerp(mG, eG, lp));
+            b = Math.floor(lerp(mB, eB, lp));
           }
-          r=Math.floor(clamp(r*p.brightnessVariation,0,255));
-          g=Math.floor(clamp(g*p.brightnessVariation,0,255));
-          b=Math.floor(clamp(b*p.brightnessVariation,0,255));
+
+          r = Math.floor(clamp(r * p.brightnessVariation, 0, 255));
+          g = Math.floor(clamp(g * p.brightnessVariation, 0, 255));
+          b = Math.floor(clamp(b * p.brightnessVariation, 0, 255));
         }
 
         const flareOsc = Math.sin(p.life * 3 * Math.PI) * 0.4;
         const baseFade = Math.pow(t, 1.5);
+
         let alpha;
         if (t < p.fadeStartRatio) {
           alpha = 0.65 + flareOsc * 0.15;
         } else {
           const fp = (t - p.fadeStartRatio) / (1 - p.fadeStartRatio);
-          alpha = clamp((0.65 - baseFade * fp) + flareOsc * 0.1 * (1 - baseFade * fp), 0, 0.65);
+          alpha = clamp(
+            0.65 - baseFade * fp + flareOsc * 0.1 * (1 - baseFade * fp),
+            0,
+            0.65
+          );
         }
+
         if (p.isDarkSwirl) alpha *= 0.6;
 
-        const glowAlpha = alpha * Math.pow(1-t, 2.8) * (1 + Math.sin(p.life * p.oscillationFreq * 2 * Math.PI / 3) * 0.5);
-        const gg = ctx.createRadialGradient(p.x, p.y, oscR*0.5, p.x, p.y, oscR*3.5);
-        gg.addColorStop(0,   `rgba(${r},${g},${b},${glowAlpha*0.9})`);
-        gg.addColorStop(0.3, `rgba(${r},${g},${b},${glowAlpha*0.5})`);
-        gg.addColorStop(0.7, `rgba(${r},${g},${b},${glowAlpha*0.15})`);
-        gg.addColorStop(1,   `rgba(${r},${g},${b},0)`);
-        ctx.fillStyle = gg;
-        ctx.beginPath(); ctx.arc(p.x, p.y, oscR*3.5, 0, Math.PI*2); ctx.fill();
+        if (!isMobile) {
+          const glowAlpha =
+            alpha *
+            Math.pow(1 - t, 2.8) *
+            (1 +
+              Math.sin((p.life * p.oscillationFreq * 2 * Math.PI) / 3) * 0.5);
+
+          const gg = ctx.createRadialGradient(
+            p.x,
+            p.y,
+            oscR * 0.5,
+            p.x,
+            p.y,
+            oscR * 3.5
+          );
+          gg.addColorStop(0, `rgba(${r},${g},${b},${glowAlpha * 0.9})`);
+          gg.addColorStop(0.3, `rgba(${r},${g},${b},${glowAlpha * 0.5})`);
+          gg.addColorStop(0.7, `rgba(${r},${g},${b},${glowAlpha * 0.15})`);
+          gg.addColorStop(1, `rgba(${r},${g},${b},0)`);
+
+          ctx.fillStyle = gg;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, oscR * 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
         ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-        ctx.beginPath(); ctx.arc(p.x, p.y, oscR, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, oscR, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       function step(now) {
         const raw = Math.min(0.033, (now - last) / 1000);
-        const dt  = Math.min(0.06, raw * CFG.timeScale);
+        const dt = Math.min(0.06, raw * CFG.timeScale);
         last = now;
 
         lbm.step(CFG.lbmSteps);
@@ -790,33 +908,40 @@
           const p = particles[i];
           p.life += dt;
 
-          if (p.life >= p.ttl || p.y+p.r < -50 || p.x+p.r < -50 || p.x-p.r > canvas.width+50) {
-            particles.splice(i, 1); continue;
+          if (
+            p.life >= p.ttl ||
+            p.y + p.r < -50 ||
+            p.x + p.r < -50 ||
+            p.x - p.r > canvas.width + 50
+          ) {
+            particles.splice(i, 1);
+            continue;
           }
 
           const age = p.life / p.ttl;
           const curlVal = lbm.sampleCurl(p.x, p.y);
-          const fluid   = lbm.sampleVelocity(p.x, p.y);
-          const u0 = 0.1;
+          const fluid = lbm.sampleVelocity(p.x, p.y);
+          const flowBias = 0.1;
 
-          const buoyFactor = p.y <= canvas.height*0.1 ? 0.3 : (1.0 - 0.55*age);
+          const buoyFactor = p.y <= canvas.height * 0.1 ? 0.3 : 1.0 - 0.55 * age;
           const buoy = CFG.rise * buoyFactor * p.riseStrength;
 
-          p.vx += (-curlVal * CFG.curlScale + (fluid.vx - u0) * CFG.lbmInfluence) * dt;
+          p.vx +=
+            (-curlVal * CFG.curlScale + (fluid.vx - flowBias) * CFG.lbmInfluence) *
+            dt;
           p.vy += (-fluid.vy * CFG.lbmInfluence * 0.5 - buoy) * dt;
 
-          p.vx *= Math.pow(CFG.drag, dt*60);
-          p.vy *= Math.pow(CFG.drag, dt*60);
-          p.x  += p.vx * dt;
-          p.y  += p.vy * dt;
+          p.vx *= Math.pow(CFG.drag, dt * 60);
+          p.vy *= Math.pow(CFG.drag, dt * 60);
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
         }
 
         ctx.globalCompositeOperation = "source-over";
-        for (let i = 0; i < particles.length; i++) drawParticle(particles[i]);
+        for (let i = 0; i < particles.length; i++) {
+          drawParticle(particles[i]);
+        }
 
-        // iOS Safari pauses rAF when the page is hidden (URL bar animating in,
-        // background tab, etc.). Stop queuing to avoid a stale loop;
-        // visibilitychange below restarts it.
         if (document.hidden) {
           animating = false;
         } else {
@@ -824,12 +949,7 @@
         }
       }
 
-      // ----- iOS-safe startup -----
-      let animating = false;
-      let started   = false;
-
-      // When iOS un-hides the page, the rAF loop has stopped — restart it.
-      document.addEventListener('visibilitychange', () => {
+      document.addEventListener("visibilitychange", () => {
         if (!document.hidden && !animating && started) {
           animating = true;
           last = performance.now();
@@ -839,10 +959,14 @@
 
       function start() {
         if (started) return;
-        // Retry until iOS has committed layout and canvas has real dimensions
-        if (!resize()) { requestAnimationFrame(start); return; }
+        if (!resize()) {
+          requestAnimationFrame(start);
+          return;
+        }
+
         started = true;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         if (!document.hidden) {
           animating = true;
           last = performance.now();
@@ -850,13 +974,13 @@
         }
       }
 
-      // Defer past 'load' so iOS finishes its layout pass before we measure the canvas
-      if (document.readyState === 'complete') {
+      if (document.readyState === "complete") {
         requestAnimationFrame(start);
       } else {
-        window.addEventListener('load', () => requestAnimationFrame(start));
+        window.addEventListener("load", () => requestAnimationFrame(start));
       }
     })();
   </script>
 </body>
 </html>
+```
