@@ -296,18 +296,134 @@
   <script>
     (() => {
       const canvas = document.getElementById("fire");
-      // alpha:false avoids iOS Safari transparency-compositing overhead and
-      // prevents the blank/black-canvas bug on WebKit.
-      const ctx = canvas.getContext("2d", { alpha: false });
+      const ctx    = canvas.getContext("2d", { alpha: false });
 
       const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      const rand  = (a, b) => a + Math.random() * (b - a);
+      const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+      const lerp  = (a, b, t) => a + (b - a) * t;
+
+      // =====================================================================
+      // MOBILE PATH — lightweight sine-noise fire, no LBM simulation
+      // =====================================================================
+      if (isMobile) {
+        const MAX  = 120;
+        const EMIT = prefersReduced ? 0 : 28;  // particles/sec
+        const particles = [];
+        let last = 0, noiseT = 0;
+
+        function resize() {
+          const rect = canvas.getBoundingClientRect();
+          if (!rect.width || !rect.height) return false;
+          // DPR=1 on mobile: avoids 4× pixel fill cost on Retina screens
+          canvas.width  = Math.floor(rect.width);
+          canvas.height = Math.floor(rect.height);
+          return true;
+        }
+        window.addEventListener("resize", resize);
+        if (window.visualViewport) window.visualViewport.addEventListener("resize", resize);
+
+        function spawn() {
+          if (particles.length >= MAX) return;
+          const x = rand(0, canvas.width);
+          // Approximate SVG burn-edge position (~bottom 8–12% of canvas)
+          const y = canvas.height * rand(0.88, 0.96);
+          particles.push({ x, y,
+            vx: rand(-18, 18), vy: rand(-90, -55),
+            r:  rand(3, 10),   life: 0,
+            ttl: rand(2.8, 5.5), fsr: rand(0.35, 0.75),
+          });
+        }
+
+        function draw(p) {
+          const age = clamp(p.life / p.ttl, 0, 1);
+          // warm orange→dark-red gradient without any per-frame trig
+          const rv = Math.floor(lerp(220, 110, age));
+          const gv = Math.floor(lerp(105,  38, age));
+          const alpha = age < p.fsr
+            ? 0.68
+            : 0.68 * (1 - (age - p.fsr) / (1 - p.fsr));
+          ctx.fillStyle = `rgba(${rv},${gv},18,${alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r * (1 + age * 0.6), 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        function frame(now) {
+          const dt = Math.min(0.05, (now - last) / 1000);
+          last = now;
+          noiseT += dt;
+
+          ctx.fillStyle = "rgba(10,7,6,0.17)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          if (EMIT > 0) {
+            const n = Math.floor(EMIT * dt + Math.random());
+            for (let i = 0; i < n; i++) spawn();
+          }
+
+          const drag = Math.pow(0.975, dt * 60); // compute once, apply per particle
+
+          for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.life += dt;
+            if (p.life >= p.ttl || p.y < -30) { particles.splice(i, 1); continue; }
+
+            // Cheap sine turbulence: 2 sin calls per particle total
+            const nx   = p.x / canvas.width;
+            const ny   = p.y / canvas.height;
+            const curl = Math.sin(nx * 5.1 + ny * 3.7 + noiseT * 1.3) * 0.055;
+            const wind = Math.sin(nx * 3.3 + noiseT * 0.8) * 0.032;
+
+            p.vx += (curl * 2200 + wind * 900) * dt;
+            p.vy += -190 * dt;   // buoyancy
+            p.vx *= drag;
+            p.vy *= drag;
+            p.x  += p.vx * dt;
+            p.y  += p.vy * dt;
+
+            draw(p);
+          }
+
+          if (!document.hidden) requestAnimationFrame(frame);
+        }
+
+        let animating = false, started = false;
+
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden && !animating && started) {
+            animating = true; last = performance.now();
+            requestAnimationFrame(frame);
+          }
+        });
+
+        function start() {
+          if (started) return;
+          if (!resize()) { requestAnimationFrame(start); return; }
+          started = true;
+          ctx.fillStyle = "#0a0706";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          if (!document.hidden) {
+            animating = true; last = performance.now();
+            requestAnimationFrame(frame);
+          }
+        }
+
+        if (document.readyState === 'complete') requestAnimationFrame(start);
+        else window.addEventListener('load', () => requestAnimationFrame(start));
+        return; // skip desktop code entirely
+      }
+
+      // =====================================================================
+      // DESKTOP PATH — full Lattice-Boltzmann fluid + particle fire
+      // =====================================================================
 
       // ----- Configuration -----
       const CFG = {
-        baseEmission: prefersReduced ? 0 : (isMobile ? 55 : 280),
-        maxParticles: isMobile ? 350 : 3000,
+        baseEmission: prefersReduced ? 0 : 280,
+        maxParticles: 3000,
         rise: 300,
         drag: 0.975,
         lifeMin: 3.2,
@@ -319,14 +435,12 @@
         timeScale: 0.7,
         curlScale: 9000,
         lbmInfluence: 1800,
-        lbmSteps: isMobile ? 4 : 20,
+        lbmSteps: 20,
       };
 
       // ----- Resize -----
       function resize() {
-        // Cap at DPR=1 on mobile: halves each canvas dimension (4× fewer pixels)
-        // which is the single biggest performance win on Retina iPhones.
-        const dpr = isMobile ? 1 : Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+        const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
         const rect = canvas.getBoundingClientRect();
         // Guard: iOS can return 0 dimensions before first layout paint
         if (!rect.width || !rect.height) return false;
@@ -339,11 +453,6 @@
       window.addEventListener("resize", resize);
       // iOS Safari fires a separate visualViewport resize when the toolbar hides/shows
       if (window.visualViewport) window.visualViewport.addEventListener("resize", resize);
-
-      // ----- Helpers -----
-      const rand  = (a, b) => a + Math.random() * (b - a);
-      const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
-      const lerp  = (a, b, t) => a + (b - a) * t;
 
       // =====================================================================
       // Lattice-Boltzmann fluid simulation (D2Q9)
@@ -646,18 +755,14 @@
         }
         if (p.isDarkSwirl) alpha *= 0.6;
 
-        // Radial-gradient glow halo — skipped on mobile because createRadialGradient
-        // is unaccelerated on iOS Safari and is the primary cause of the black screen.
-        if (!isMobile) {
-          const glowAlpha = alpha * Math.pow(1-t, 2.8) * (1 + Math.sin(p.life * p.oscillationFreq * 2 * Math.PI / 3) * 0.5);
-          const gg = ctx.createRadialGradient(p.x, p.y, oscR*0.5, p.x, p.y, oscR*3.5);
-          gg.addColorStop(0,   `rgba(${r},${g},${b},${glowAlpha*0.9})`);
-          gg.addColorStop(0.3, `rgba(${r},${g},${b},${glowAlpha*0.5})`);
-          gg.addColorStop(0.7, `rgba(${r},${g},${b},${glowAlpha*0.15})`);
-          gg.addColorStop(1,   `rgba(${r},${g},${b},0)`);
-          ctx.fillStyle = gg;
-          ctx.beginPath(); ctx.arc(p.x, p.y, oscR*3.5, 0, Math.PI*2); ctx.fill();
-        }
+        const glowAlpha = alpha * Math.pow(1-t, 2.8) * (1 + Math.sin(p.life * p.oscillationFreq * 2 * Math.PI / 3) * 0.5);
+        const gg = ctx.createRadialGradient(p.x, p.y, oscR*0.5, p.x, p.y, oscR*3.5);
+        gg.addColorStop(0,   `rgba(${r},${g},${b},${glowAlpha*0.9})`);
+        gg.addColorStop(0.3, `rgba(${r},${g},${b},${glowAlpha*0.5})`);
+        gg.addColorStop(0.7, `rgba(${r},${g},${b},${glowAlpha*0.15})`);
+        gg.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+        ctx.fillStyle = gg;
+        ctx.beginPath(); ctx.arc(p.x, p.y, oscR*3.5, 0, Math.PI*2); ctx.fill();
 
         ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
         ctx.beginPath(); ctx.arc(p.x, p.y, oscR, 0, Math.PI*2); ctx.fill();
