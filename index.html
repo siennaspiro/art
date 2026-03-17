@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,13 +7,6 @@
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
   <title>Sienna Spiro</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&display=swap"
-    rel="stylesheet"
-  />
 
   <style>
     body {
@@ -68,12 +60,11 @@
       width: 100%;
       padding: 0 2vw;
       box-sizing: border-box;
-      mix-blend-mode: screen;
       margin-bottom: 22vh;
     }
 
     .hero-text h1 {
-      font-family: "Cormorant", "Cormorant Garamond", Georgia, serif;
+      font-family: Georgia, serif;
       font-size: clamp(3.5rem, 14vw, 12rem);
       margin: 0;
       line-height: 0.88;
@@ -81,6 +72,7 @@
       flex-direction: column;
       align-items: flex-start;
       position: relative;
+      color: rgba(255, 215, 150, 0.78);
     }
 
     .t1 {
@@ -88,11 +80,8 @@
       font-style: italic;
       font-weight: 300;
       letter-spacing: 0.07em;
-      color: rgba(255, 215, 150, 0.72);
       transform: translateX(2%) scale(1.08);
       transform-origin: left center;
-      position: relative;
-      z-index: 2;
     }
 
     .t2 {
@@ -100,75 +89,11 @@
       font-style: normal;
       font-weight: 300;
       font-size: 0.62em;
-      letter-spacing: 0.42em;
-      text-indent: 0.42em;
+      letter-spacing: 0.28em;
+      text-indent: 0.28em;
       color: rgba(220, 165, 80, 0.68);
       transform: translateX(34%) scale(0.92);
       transform-origin: left center;
-      filter: blur(0.3px);
-      position: relative;
-      z-index: 1;
-    }
-
-    .subtitle {
-      font-family: "Cormorant", Georgia, serif;
-      font-size: clamp(0.55rem, 1.05vw, 0.82rem);
-      font-style: italic;
-      font-weight: 300;
-      margin-top: 1.8rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: rgba(255, 188, 105, 0.36);
-      text-shadow: none;
-    }
-
-    .hero-rules {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      pointer-events: none;
-    }
-
-    .hero-rules::before,
-    .hero-rules::after {
-      content: "";
-      position: absolute;
-      left: 5%;
-      right: 5%;
-      height: 1px;
-    }
-
-    .hero-rules::before {
-      top: 15%;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 185, 80, 0.18) 20%,
-        rgba(255, 185, 80, 0.18) 80%,
-        transparent
-      );
-    }
-
-    .hero-rules::after {
-      bottom: 11%;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 150, 45, 0.11) 20%,
-        rgba(255, 150, 45, 0.11) 80%,
-        transparent
-      );
-    }
-
-    .hero-grain {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
-      pointer-events: none;
-      opacity: 0.06;
-      background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/></filter><rect width='256' height='256' filter='url(%23n)'/></svg>");
-      background-size: 180px 180px;
-      mix-blend-mode: overlay;
     }
 
     .hero-burn {
@@ -195,10 +120,6 @@
       position: relative;
     }
 
-    .intro {
-      margin-bottom: 2rem;
-    }
-
     .intro blockquote {
       border-left: 4px solid #7a3d1a;
       padding-left: 1rem;
@@ -217,18 +138,7 @@
       text-decoration: none;
       border-radius: 10px;
       font-weight: 600;
-      letter-spacing: 0.02em;
-      transition:
-        transform 0.15s ease,
-        background-color 0.15s ease,
-        box-shadow 0.15s ease;
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
-    }
-
-    .btn:hover {
-      background-color: #1a110c;
-      transform: translateY(-2px);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.55);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.45);
     }
 
     footer {
@@ -243,26 +153,15 @@
       .hero {
         min-height: calc(var(--vh, 1svh) * 50);
       }
-
       .hero-text {
         margin-bottom: 18vh;
-        mix-blend-mode: normal;
       }
-
       .hero-text h1 {
         font-size: clamp(2.8rem, 17vw, 5.5rem);
       }
-
       .t2 {
-        letter-spacing: 0.2em;
-        text-indent: 0.2em;
-        filter: none;
-      }
-
-      .subtitle {
-        font-size: 0.6rem;
-        letter-spacing: 0.25em;
-        margin-top: 1rem;
+        letter-spacing: 0.18em;
+        text-indent: 0.18em;
       }
     }
   </style>
@@ -270,44 +169,29 @@
   <script>
     function setVH() {
       const vh =
-        (window.visualViewport
-          ? window.visualViewport.height
-          : window.innerHeight) * 0.01;
+        (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 0.01;
       document.documentElement.style.setProperty("--vh", `${vh}px`);
     }
 
     setVH();
-
-    let vhResizeRaf = 0;
-    function scheduleVHUpdate() {
-      if (vhResizeRaf) return;
-      vhResizeRaf = requestAnimationFrame(() => {
-        vhResizeRaf = 0;
+    let vhRaf = 0;
+    function scheduleVH() {
+      if (vhRaf) return;
+      vhRaf = requestAnimationFrame(() => {
+        vhRaf = 0;
         setVH();
       });
     }
 
-    window.addEventListener("resize", scheduleVHUpdate);
+    window.addEventListener("resize", scheduleVH);
     if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", scheduleVHUpdate);
+      window.visualViewport.addEventListener("resize", scheduleVH);
     }
-  </script>
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-142MQVDRL2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-    gtag("config", "G-142MQVDRL2");
   </script>
 </head>
-
 <body>
   <header class="hero">
     <canvas id="fire"></canvas>
-    <div class="hero-rules" aria-hidden="true"></div>
 
     <div class="hero-text">
       <h1>
@@ -317,15 +201,8 @@
     </div>
 
     <div class="hero-burn" aria-hidden="true">
-      <svg
-        viewBox="0 0 1440 65"
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill="#0e0b08"
-          d="M0,54 C240,72 860,6 1440,28 L1440,65 L0,65 Z"
-        />
+      <svg viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#0e0b08" d="M0,54 C240,72 860,6 1440,28 L1440,65 L0,65 Z"/>
       </svg>
     </div>
   </header>
@@ -335,27 +212,13 @@
       <blockquote>
         <p><em>“Born of earth, shaped by flame, and carried on breath.”</em></p>
       </blockquote>
-
       <p>
         The name <strong>Sienna</strong> comes from <em>terra di Siena</em> —
-        the clay-rich soil of Tuscany, where iron and manganese oxide stain the
-        land in ochres and burnt reds. But long before it colored canvas, it
-        mirrored the skies of ancient Italy. In the aftermath of Rome’s great
-        fires, the air would have swirled with smoke, casting the heavens in
-        hues of raw and burnt sienna.
+        the clay-rich soil of Tuscany, where iron and manganese oxide stain the land.
       </p>
-
       <p>
-        <strong>Spiro</strong>, from Latin <em>spīrāre</em> (“to breathe”) and
-        <em>spīra</em> (Greek <em>speîra</em>, “coil”), evokes both life and
-        motion — breath spiraling like smoke through time.
+        <strong>Spiro</strong> evokes breath and motion — breath spiraling like smoke through time.
       </p>
-
-      <p>
-        This project exists at that intersection: earth and air, pigment and
-        pulse, history and abstraction.
-      </p>
-
       <a href="gallery.html" class="btn">View Art Gallery</a>
     </section>
   </main>
@@ -369,536 +232,140 @@
       const canvas = document.getElementById("fire");
       const ctx = canvas.getContext("2d", { alpha: false });
 
-      const prefersReduced = window.matchMedia?.(
-        "(prefers-reduced-motion: reduce)"
-      )?.matches;
-
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
       const CFG = {
-        baseEmission: prefersReduced ? 0 : isMobile ? 34 : 220,
-        maxParticles: isMobile ? 220 : 2200,
-        rise: 300,
-        drag: 0.975,
-        lifeMin: 3.2,
-        lifeMax: 7.5,
+        emission: prefersReduced ? 0 : (isMobile ? 18 : 48),
+        maxParticles: isMobile ? 120 : 260,
+        rise: isMobile ? 90 : 130,
+        drag: 0.985,
+        lifeMin: 1.8,
+        lifeMax: 3.8,
         radiusMin: 2,
-        radiusMax: 8,
-        bgFadeMin: 0.07,
-        bgFadeMax: 0.15,
-        timeScale: 0.7,
-        curlScale: 9000,
-        lbmInfluence: 1800,
-        lbmSteps: isMobile ? 2 : 12,
+        radiusMax: 7,
+        fadeMin: 0.10,
+        fadeMax: 0.18
       };
 
       let renderDpr = 1;
-      let resizeRaf = 0;
-      let lastCssWidth = 0;
-      let lastCssHeight = 0;
+      let animating = false;
+      let started = false;
+      let last = performance.now();
+      let emitCarry = 0;
 
-      function scheduleResize() {
-        if (resizeRaf) return;
-        resizeRaf = requestAnimationFrame(() => {
-          resizeRaf = 0;
-          resize();
-        });
-      }
+      const particles = [];
+
+      const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const rand = (a, b) => a + Math.random() * (b - a);
 
       function resize() {
-        renderDpr = isMobile
-          ? 1
-          : Math.min(2, Math.max(1, window.devicePixelRatio || 1));
-
+        renderDpr = isMobile ? 1 : Math.min(2, window.devicePixelRatio || 1);
         const rect = canvas.getBoundingClientRect();
         if (!rect.width || !rect.height) return false;
 
-        const cssWidth = Math.floor(rect.width);
-        const cssHeight = Math.floor(rect.height);
-        const newW = Math.max(1, Math.floor(rect.width * renderDpr));
-        const newH = Math.max(1, Math.floor(rect.height * renderDpr));
+        const w = Math.max(1, Math.floor(rect.width * renderDpr));
+        const h = Math.max(1, Math.floor(rect.height * renderDpr));
 
-        const sizeChanged =
-          canvas.width !== newW ||
-          canvas.height !== newH ||
-          cssWidth !== lastCssWidth ||
-          cssHeight !== lastCssHeight;
-
-        if (!sizeChanged) return true;
-
-        lastCssWidth = cssWidth;
-        lastCssHeight = cssHeight;
-        canvas.width = newW;
-        canvas.height = newH;
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        lbm.init();
+        if (canvas.width !== w || canvas.height !== h) {
+          canvas.width = w;
+          canvas.height = h;
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.fillStyle = "#0a0706";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          particles.length = 0;
+        }
         return true;
       }
 
-      window.addEventListener("resize", scheduleResize);
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", scheduleResize);
+      function edgeY(x) {
+        const t = x / canvas.width;
+        const y =
+          Math.pow(1 - t, 3) * 54 +
+          3 * Math.pow(1 - t, 2) * t * 72 +
+          3 * (1 - t) * Math.pow(t, 2) * 6 +
+          Math.pow(t, 3) * 28;
+
+        return canvas.height - (65 - y) * renderDpr;
       }
 
-      const rand = (a, b) => a + Math.random() * (b - a);
-      const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
-      const lerp = (a, b, t) => a + (b - a) * t;
+      function flowField(x, y, time) {
+        const nx = x / canvas.width;
+        const ny = y / canvas.height;
 
-      const lbm = (() => {
-        const W = 200;
-        const H = 80;
-        const four9ths = 4 / 9;
-        const one9th = 1 / 9;
-        const one36th = 1 / 36;
-        const viscosity = 0.02;
-        const omega = 1 / (3 * viscosity + 0.5);
-        const u0 = 0.1;
+        const swirl =
+          Math.sin(nx * 10 + time * 0.0014) * 24 +
+          Math.sin(ny * 14 - time * 0.0018) * 16;
 
-        let n0, nN, nS, nE, nW, nNE, nNW, nSE, nSW;
-        let rho, ux, uy;
-        let barrier, barrierN, barrierS, barrierE, barrierW;
-        let barrierNE, barrierNW, barrierSE, barrierSW;
-        let curlField = null;
+        const lift =
+          -CFG.rise -
+          25 * Math.sin(nx * 7 - time * 0.0012) -
+          18 * Math.cos(ny * 9 + time * 0.0011);
 
-        const idx = (x, y) => y * W + x;
-
-        function roll1(src, dst, shiftX, shiftY) {
-          for (let y = 0; y < H; y++) {
-            for (let x = 0; x < W; x++) {
-              const nx = (x - shiftX + W) % W;
-              const ny = (y - shiftY + H) % H;
-              dst[idx(x, y)] = src[idx(nx, ny)];
-            }
-          }
-          return dst;
-        }
-
-        const mkFloat = () => new Float32Array(W * H);
-        const mkBool = () => new Uint8Array(W * H);
-
-        function initBarrier() {
-          barrier = mkBool();
-          const configs = [
-            { bx: Math.floor(W * 0.1), by: Math.floor(H * 0.3) },
-            { bx: Math.floor(W * 0.28), by: Math.floor(H * 0.65) },
-            { bx: Math.floor(W * 0.46), by: Math.floor(H * 0.42) },
-            { bx: Math.floor(W * 0.64), by: Math.floor(H * 0.72) },
-            { bx: Math.floor(W * 0.82), by: Math.floor(H * 0.35) },
-          ];
-
-          for (const { bx, by } of configs) {
-            for (let y = by - 6; y < by + 6; y++) {
-              if (y >= 0 && y < H) barrier[idx(bx, y)] = 1;
-            }
-          }
-
-          barrierN = new Uint8Array(roll1(barrier, mkBool(), 0, 1));
-          barrierS = new Uint8Array(roll1(barrier, mkBool(), 0, -1));
-          barrierE = new Uint8Array(roll1(barrier, mkBool(), 1, 0));
-          barrierW = new Uint8Array(roll1(barrier, mkBool(), -1, 0));
-
-          const tmpN = new Uint8Array(barrierN);
-          const tmpS = new Uint8Array(barrierS);
-          barrierNE = new Uint8Array(roll1(tmpN, mkBool(), 1, 0));
-          barrierNW = new Uint8Array(roll1(tmpN, mkBool(), -1, 0));
-          barrierSE = new Uint8Array(roll1(tmpS, mkBool(), 1, 0));
-          barrierSW = new Uint8Array(roll1(tmpS, mkBool(), -1, 0));
-        }
-
-        function init() {
-          n0 = mkFloat();
-          nN = mkFloat();
-          nS = mkFloat();
-          nE = mkFloat();
-          nW = mkFloat();
-          nNE = mkFloat();
-          nNW = mkFloat();
-          nSE = mkFloat();
-          nSW = mkFloat();
-          rho = mkFloat();
-          ux = mkFloat();
-          uy = mkFloat();
-
-          const base = 1 - 1.5 * u0 * u0;
-          const eastBase = 1 + 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0;
-          const westBase = 1 - 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0;
-
-          for (let i = 0; i < W * H; i++) {
-            n0[i] = four9ths * base;
-            nN[i] = one9th * base;
-            nS[i] = one9th * base;
-            nE[i] = one9th * eastBase;
-            nW[i] = one9th * westBase;
-            nNE[i] = one36th * eastBase;
-            nSE[i] = one36th * eastBase;
-            nNW[i] = one36th * westBase;
-            nSW[i] = one36th * westBase;
-            rho[i] =
-              n0[i] +
-              nN[i] +
-              nS[i] +
-              nE[i] +
-              nW[i] +
-              nNE[i] +
-              nSE[i] +
-              nNW[i] +
-              nSW[i];
-            ux[i] =
-              (nE[i] + nNE[i] + nSE[i] - nW[i] - nNW[i] - nSW[i]) / rho[i];
-            uy[i] =
-              (nN[i] + nNE[i] + nNW[i] - nS[i] - nSE[i] - nSW[i]) / rho[i];
-          }
-
-          initBarrier();
-        }
-
-        let _nN, _nS, _nE, _nW, _nNE, _nNW, _nSE, _nSW;
-
-        function ensureTemp() {
-          if (_nN) return;
-          _nN = mkFloat();
-          _nS = mkFloat();
-          _nE = mkFloat();
-          _nW = mkFloat();
-          _nNE = mkFloat();
-          _nNW = mkFloat();
-          _nSE = mkFloat();
-          _nSW = mkFloat();
-        }
-
-        function stream() {
-          ensureTemp();
-
-          roll1(nN, _nN, 0, 1);
-          roll1(nNE, _nNE, 1, 1);
-          roll1(nNW, _nNW, -1, 1);
-          roll1(nS, _nS, 0, -1);
-          roll1(nSE, _nSE, 1, -1);
-          roll1(nSW, _nSW, -1, -1);
-          roll1(nE, _nE, 1, 0);
-          roll1(nW, _nW, -1, 0);
-
-          [nN, _nN] = [_nN, nN];
-          [nS, _nS] = [_nS, nS];
-          [nE, _nE] = [_nE, nE];
-          [nW, _nW] = [_nW, nW];
-          [nNE, _nNE] = [_nNE, nNE];
-          [nNW, _nNW] = [_nNW, nNW];
-          [nSE, _nSE] = [_nSE, nSE];
-          [nSW, _nSW] = [_nSW, nSW];
-
-          for (let y = 0; y < H; y++) {
-            for (let x = 0; x < W; x++) {
-              const i = idx(x, y);
-              if (barrierN[i]) nN[i] = nS[idx(x, (y - 1 + H) % H)];
-              if (barrierS[i]) nS[i] = nN[idx(x, (y + 1) % H)];
-              if (barrierE[i]) nE[i] = nW[idx((x - 1 + W) % W, y)];
-              if (barrierW[i]) nW[i] = nE[idx((x + 1) % W, y)];
-              if (barrierNE[i])
-                nNE[i] = nSW[idx((x - 1 + W) % W, (y - 1 + H) % H)];
-              if (barrierNW[i])
-                nNW[i] = nSE[idx((x + 1) % W, (y - 1 + H) % H)];
-              if (barrierSE[i])
-                nSE[i] = nNW[idx((x - 1 + W) % W, (y + 1) % H)];
-              if (barrierSW[i])
-                nSW[i] = nNE[idx((x + 1) % W, (y + 1) % H)];
-            }
-          }
-        }
-
-        function collide() {
-          const eIn = one9th * (1 + 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0);
-          const wIn = one9th * (1 - 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0);
-          const neIn = one36th * (1 + 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0);
-          const nwIn = one36th * (1 - 3 * u0 + 4.5 * u0 * u0 - 1.5 * u0 * u0);
-
-          for (let y = 0; y < H; y++) {
-            for (let x = 0; x < W; x++) {
-              const i = idx(x, y);
-              const r =
-                n0[i] +
-                nN[i] +
-                nS[i] +
-                nE[i] +
-                nW[i] +
-                nNE[i] +
-                nSE[i] +
-                nNW[i] +
-                nSW[i];
-
-              rho[i] = r;
-
-              const vx =
-                (nE[i] + nNE[i] + nSE[i] - nW[i] - nNW[i] - nSW[i]) / r;
-              const vy =
-                (nN[i] + nNE[i] + nNW[i] - nS[i] - nSE[i] - nSW[i]) / r;
-
-              ux[i] = vx;
-              uy[i] = vy;
-
-              const ux2 = vx * vx;
-              const uy2 = vy * vy;
-              const u2 = ux2 + uy2;
-              const omu215 = 1 - 1.5 * u2;
-              const uxuy = vx * vy;
-              const om1 = 1 - omega;
-
-              n0[i] = om1 * n0[i] + omega * four9ths * r * omu215;
-              nN[i] = om1 * nN[i] + omega * one9th * r * (omu215 + 3 * vy + 4.5 * uy2);
-              nS[i] = om1 * nS[i] + omega * one9th * r * (omu215 - 3 * vy + 4.5 * uy2);
-              nE[i] = om1 * nE[i] + omega * one9th * r * (omu215 + 3 * vx + 4.5 * ux2);
-              nW[i] = om1 * nW[i] + omega * one9th * r * (omu215 - 3 * vx + 4.5 * ux2);
-              nNE[i] =
-                om1 * nNE[i] +
-                omega * one36th * r * (omu215 + 3 * (vx + vy) + 4.5 * (u2 + 2 * uxuy));
-              nNW[i] =
-                om1 * nNW[i] +
-                omega * one36th * r * (omu215 + 3 * (-vx + vy) + 4.5 * (u2 - 2 * uxuy));
-              nSE[i] =
-                om1 * nSE[i] +
-                omega * one36th * r * (omu215 + 3 * (vx - vy) + 4.5 * (u2 - 2 * uxuy));
-              nSW[i] =
-                om1 * nSW[i] +
-                omega * one36th * r * (omu215 + 3 * (-vx - vy) + 4.5 * (u2 + 2 * uxuy));
-
-              if (x === 0) {
-                nE[i] = eIn;
-                nW[i] = wIn;
-                nNE[i] = neIn;
-                nSE[i] = neIn;
-                nNW[i] = nwIn;
-                nSW[i] = nwIn;
-              }
-            }
-          }
-        }
-
-        function computeCurlField() {
-          if (!curlField) curlField = mkFloat();
-
-          for (let y = 0; y < H; y++) {
-            for (let x = 0; x < W; x++) {
-              const xp = (x + 1) % W;
-              const xm = (x - 1 + W) % W;
-              const yp = (y + 1) % H;
-              const ym = (y - 1 + H) % H;
-
-              curlField[idx(x, y)] =
-                (uy[idx(xp, y)] - uy[idx(xm, y)]) -
-                (ux[idx(x, yp)] - ux[idx(x, ym)]);
-            }
-          }
-        }
-
-        function bilinear(field, px, py) {
-          const gx = (px / canvas.width) * (W - 1);
-          const gy = ((canvas.height - py) / canvas.height) * (H - 1);
-          const x0 = clamp(Math.floor(gx), 0, W - 2);
-          const y0 = clamp(Math.floor(gy), 0, H - 2);
-          const fx = gx - x0;
-          const fy = gy - y0;
-          const i00 = idx(x0, y0);
-          const i10 = idx(x0 + 1, y0);
-          const i01 = idx(x0, y0 + 1);
-          const i11 = idx(x0 + 1, y0 + 1);
-
-          return lerp(
-            lerp(field[i00], field[i10], fx),
-            lerp(field[i01], field[i11], fx),
-            fy
-          );
-        }
-
-        function sampleVelocity(px, py) {
-          return {
-            vx: bilinear(ux, px, py),
-            vy: bilinear(uy, px, py),
-          };
-        }
-
-        function sampleCurl(px, py) {
-          return bilinear(curlField, px, py);
-        }
-
-        function step(stepsPerFrame) {
-          for (let s = 0; s < stepsPerFrame; s++) {
-            stream();
-            collide();
-          }
-          computeCurlField();
-        }
-
-        return { init, step, sampleVelocity, sampleCurl };
-      })();
-
-      const EDGE_P1X = 240;
-      const EDGE_P1Y = 72;
-      const EDGE_P2X = 860;
-      const EDGE_P2Y = 6;
-      const EDGE_P0Y = 54;
-      const EDGE_P3Y = 28;
-      const EDGE_SVG_H = 65;
-
-      function edgeY(canvasX) {
-        const svgX = (canvasX / canvas.width) * 1440;
-
-        let t = svgX / 1440;
-        for (let k = 0; k < 8; k++) {
-          const mt = 1 - t;
-          const bx =
-            3 * mt * mt * t * EDGE_P1X +
-            3 * mt * t * t * EDGE_P2X +
-            t * t * t * 1440;
-          const dbx =
-            3 * mt * mt * EDGE_P1X +
-            6 * mt * t * (EDGE_P2X - EDGE_P1X) +
-            3 * t * t * (1440 - EDGE_P2X);
-
-          if (Math.abs(dbx) < 1e-6) break;
-          t -= (bx - svgX) / dbx;
-          t = clamp(t, 0, 1);
-        }
-
-        const mt = 1 - t;
-        const by =
-          mt * mt * mt * EDGE_P0Y +
-          3 * mt * mt * t * EDGE_P1Y +
-          3 * mt * t * t * EDGE_P2Y +
-          t * t * t * EDGE_P3Y;
-
-        return canvas.height - (EDGE_SVG_H - by) * renderDpr;
+        return { vx: swirl, vy: lift };
       }
 
-      const particles = [];
-      let last = performance.now();
-      let emitCarry = 0;
-      let animating = false;
-      let started = false;
-
-      function spawn(count) {
-        for (let i = 0; i < count; i++) {
+      function spawn(n) {
+        for (let i = 0; i < n; i++) {
           if (particles.length >= CFG.maxParticles) return;
 
           const x = rand(0, canvas.width);
-          const sy = edgeY(x);
-          const angle = rand(-Math.PI * 0.52, -Math.PI * 0.48);
-          const speed = rand(30, 140);
+          const y = edgeY(x) + rand(-6, 6) * renderDpr;
 
           particles.push({
             x,
-            y: sy + rand(-8, 8) * renderDpr,
-            vx: Math.cos(angle) * speed + rand(-20, 20),
-            vy: Math.sin(angle) * speed + rand(-10, 10),
-            r: rand(CFG.radiusMin, CFG.radiusMax) * rand(0.6, 1.4),
+            y,
+            vx: rand(-18, 18),
+            vy: rand(-65, -25),
+            r: rand(CFG.radiusMin, CFG.radiusMax),
             life: 0,
             ttl: rand(CFG.lifeMin, CFG.lifeMax),
-            fadeStartRatio: rand(0.3, 0.8),
-            riseStrength: rand(0.7, 1.3),
-            colorShift: rand(-0.6, 0.6),
-            brightnessVariation: rand(0.8, 1.1),
-            oscillationFreq: rand(1.5, 4.0),
-            isDarkSwirl: Math.random() < 0.15,
+            shift: rand(-0.5, 0.5),
+            flicker: rand(0.8, 1.2),
+            dark: Math.random() < 0.12
           });
         }
       }
 
       function drawParticle(p) {
         const t = clamp(p.life / p.ttl, 0, 1);
-        const sizeOsc =
-          1 + Math.sin((p.life * p.oscillationFreq * 2 * Math.PI) / 3) * 0.4;
-        const oscR = p.r * sizeOsc;
+        const alpha = (1 - t) * 0.58;
 
         let r, g, b;
-
-        if (p.isDarkSwirl) {
-          r = Math.floor(94 + t * 40);
-          g = Math.floor(44 + t * 30);
-          b = Math.floor(16 + t * 25);
+        if (p.dark) {
+          r = 95; g = 42; b = 18;
         } else {
-          const cp = clamp((t + p.colorShift) * 1.5, 0, 1);
-          const sR = 213, sG = 125, sB = 47;
-          const mR = 182, mG = 78, mB = 32;
-          const eR = 122, eG = 55, eB = 21;
-
-          if (cp < 0.5) {
-            const lp = cp * 2;
-            r = Math.floor(lerp(sR, mR, lp));
-            g = Math.floor(lerp(sG, mG, lp));
-            b = Math.floor(lerp(sB, mB, lp));
+          const c = clamp(t + p.shift, 0, 1);
+          if (c < 0.45) {
+            const k = c / 0.45;
+            r = Math.floor(lerp(235, 185, k));
+            g = Math.floor(lerp(155, 85, k));
+            b = Math.floor(lerp(75, 30, k));
           } else {
-            const lp = (cp - 0.5) * 2;
-            r = Math.floor(lerp(mR, eR, lp));
-            g = Math.floor(lerp(mG, eG, lp));
-            b = Math.floor(lerp(mB, eB, lp));
+            const k = (c - 0.45) / 0.55;
+            r = Math.floor(lerp(185, 110, k));
+            g = Math.floor(lerp(85, 45, k));
+            b = Math.floor(lerp(30, 18, k));
           }
-
-          r = Math.floor(clamp(r * p.brightnessVariation, 0, 255));
-          g = Math.floor(clamp(g * p.brightnessVariation, 0, 255));
-          b = Math.floor(clamp(b * p.brightnessVariation, 0, 255));
         }
 
-        const flareOsc = Math.sin(p.life * 3 * Math.PI) * 0.4;
-        const baseFade = Math.pow(t, 1.5);
-
-        let alpha;
-        if (t < p.fadeStartRatio) {
-          alpha = 0.65 + flareOsc * 0.15;
-        } else {
-          const fp = (t - p.fadeStartRatio) / (1 - p.fadeStartRatio);
-          alpha = clamp(
-            0.65 - baseFade * fp + flareOsc * 0.1 * (1 - baseFade * fp),
-            0,
-            0.65
-          );
-        }
-
-        if (p.isDarkSwirl) alpha *= 0.6;
-
-        if (!isMobile) {
-          const glowAlpha =
-            alpha *
-            Math.pow(1 - t, 2.8) *
-            (1 +
-              Math.sin((p.life * p.oscillationFreq * 2 * Math.PI) / 3) * 0.5);
-
-          const gg = ctx.createRadialGradient(
-            p.x,
-            p.y,
-            oscR * 0.5,
-            p.x,
-            p.y,
-            oscR * 3.5
-          );
-          gg.addColorStop(0, `rgba(${r},${g},${b},${glowAlpha * 0.9})`);
-          gg.addColorStop(0.3, `rgba(${r},${g},${b},${glowAlpha * 0.5})`);
-          gg.addColorStop(0.7, `rgba(${r},${g},${b},${glowAlpha * 0.15})`);
-          gg.addColorStop(1, `rgba(${r},${g},${b},0)`);
-
-          ctx.fillStyle = gg;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, oscR * 3.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
+        const rr = p.r * (1 + Math.sin(p.life * 8) * 0.18);
         ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, oscR, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, rr, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      function step(now) {
-        const raw = Math.min(0.033, (now - last) / 1000);
-        const dt = Math.min(0.06, raw * CFG.timeScale);
+      function frame(now) {
+        const dt = Math.min(0.033, (now - last) / 1000);
         last = now;
 
-        lbm.step(CFG.lbmSteps);
-
-        ctx.globalCompositeOperation = "source-over";
-        ctx.fillStyle = `rgba(0,0,0,${rand(CFG.bgFadeMin, CFG.bgFadeMax)})`;
+        ctx.fillStyle = `rgba(0,0,0,${rand(CFG.fadeMin, CFG.fadeMax)})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        if (CFG.baseEmission > 0) {
-          emitCarry += CFG.baseEmission * dt;
+        if (CFG.emission > 0) {
+          emitCarry += CFG.emission * dt;
           const n = Math.floor(emitCarry);
           emitCarry -= n;
           spawn(n);
@@ -910,52 +377,36 @@
 
           if (
             p.life >= p.ttl ||
-            p.y + p.r < -50 ||
-            p.x + p.r < -50 ||
-            p.x - p.r > canvas.width + 50
+            p.y < -40 ||
+            p.x < -40 ||
+            p.x > canvas.width + 40
           ) {
             particles.splice(i, 1);
             continue;
           }
 
-          const age = p.life / p.ttl;
-          const curlVal = lbm.sampleCurl(p.x, p.y);
-          const fluid = lbm.sampleVelocity(p.x, p.y);
-          const flowBias = 0.1;
+          const flow = flowField(p.x, p.y, now);
+          p.vx += flow.vx * dt;
+          p.vy += flow.vy * dt;
 
-          const buoyFactor = p.y <= canvas.height * 0.1 ? 0.3 : 1.0 - 0.55 * age;
-          const buoy = CFG.rise * buoyFactor * p.riseStrength;
+          p.vx *= CFG.drag;
+          p.vy *= CFG.drag;
 
-          p.vx +=
-            (-curlVal * CFG.curlScale + (fluid.vx - flowBias) * CFG.lbmInfluence) *
-            dt;
-          p.vy += (-fluid.vy * CFG.lbmInfluence * 0.5 - buoy) * dt;
-
-          p.vx *= Math.pow(CFG.drag, dt * 60);
-          p.vy *= Math.pow(CFG.drag, dt * 60);
           p.x += p.vx * dt;
           p.y += p.vy * dt;
         }
 
-        ctx.globalCompositeOperation = "source-over";
         for (let i = 0; i < particles.length; i++) {
           drawParticle(particles[i]);
         }
 
         if (document.hidden) {
           animating = false;
-        } else {
-          requestAnimationFrame(step);
+          return;
         }
-      }
 
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden && !animating && started) {
-          animating = true;
-          last = performance.now();
-          requestAnimationFrame(step);
-        }
-      });
+        requestAnimationFrame(frame);
+      }
 
       function start() {
         if (started) return;
@@ -963,16 +414,24 @@
           requestAnimationFrame(start);
           return;
         }
-
         started = true;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        animating = true;
+        last = performance.now();
+        requestAnimationFrame(frame);
+      }
 
-        if (!document.hidden) {
+      window.addEventListener("resize", resize);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", resize);
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden && started && !animating) {
           animating = true;
           last = performance.now();
-          requestAnimationFrame(step);
+          requestAnimationFrame(frame);
         }
-      }
+      });
 
       if (document.readyState === "complete") {
         requestAnimationFrame(start);
@@ -983,4 +442,3 @@
   </script>
 </body>
 </html>
-```
