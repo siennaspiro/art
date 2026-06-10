@@ -63,17 +63,6 @@
       z-index: 0;
     }
 
-    .hero.low-power-mode canvas#fire {
-      display: none;
-    }
-
-    .hero.low-power-mode {
-      background:
-        radial-gradient(circle at 50% 96%, rgba(198, 87, 28, 0.44), transparent 30%),
-        radial-gradient(circle at 42% 78%, rgba(134, 52, 18, 0.32), transparent 42%),
-        linear-gradient(180deg, #090605 0%, #130b07 62%, #21110a 100%);
-    }
-
     .hero::after {
       content: "";
       position: absolute;
@@ -616,107 +605,23 @@
       )?.matches;
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-      const cores = navigator.hardwareConcurrency || 2;
-      const memory = navigator.deviceMemory || (isIOS ? 2 : 4);
-      const dpr = window.devicePixelRatio || 1;
-      const screenPixels = Math.max(screen.width, screen.height) * Math.min(screen.width, screen.height) * dpr * dpr;
-
-      function getPerformanceTier() {
-        if (prefersReduced) return "static";
-
-        // Older iPhones often do not report deviceMemory, so treat small/high-DPR iOS devices cautiously.
-        if (
-          cores <= 2 ||
-          memory <= 2 ||
-          (isIOS && cores <= 4) ||
-          (isMobile && screenPixels < 2600000)
-        ) {
-          return "low";
-        }
-
-        if (isMobile || cores <= 4 || memory <= 4) return "medium";
-        return "high";
-      }
-
-      let performanceTier = getPerformanceTier();
-
-      const CONFIG_BY_TIER = {
-        static: {
-          baseEmission: 0,
-          maxParticles: 0,
-          lbmSteps: 0,
-          targetFPS: 0,
-          renderDprCap: 1,
-          disableGlow: true,
-          disableLBM: true,
-        },
-        low: {
-          baseEmission: 8,
-          maxParticles: 70,
-          lbmSteps: 0,
-          targetFPS: 24,
-          renderDprCap: 1,
-          disableGlow: true,
-          disableLBM: true,
-        },
-        medium: {
-          baseEmission: 18,
-          maxParticles: 160,
-          lbmSteps: 1,
-          targetFPS: 30,
-          renderDprCap: 1,
-          disableGlow: true,
-          disableLBM: false,
-        },
-        high: {
-          baseEmission: 95,
-          maxParticles: 850,
-          lbmSteps: 6,
-          targetFPS: 45,
-          renderDprCap: 1.5,
-          disableGlow: false,
-          disableLBM: false,
-        },
-      };
 
       const CFG = {
-        ...CONFIG_BY_TIER[performanceTier],
+        baseEmission: prefersReduced ? 0 : isMobile ? 26 : 140,
+        maxParticles: isMobile ? 220 : 1500,
         rise: 300,
         drag: 0.975,
         lifeMin: 3.2,
         lifeMax: 7.5,
         radiusMin: 2,
-        radiusMax: performanceTier === "low" ? 6 : 8,
-        bgFadeMin: 0.08,
-        bgFadeMax: 0.18,
-        timeScale: performanceTier === "low" ? 0.62 : 0.7,
-        curlScale: performanceTier === "high" ? 6500 : 4200,
-        lbmInfluence: performanceTier === "high" ? 1200 : 600,
+        radiusMax: 8,
+        bgFadeMin: 0.07,
+        bgFadeMax: 0.15,
+        timeScale: 0.7,
+        curlScale: 9000,
+        lbmInfluence: 1800,
+        lbmSteps: isMobile ? 2 : 12,
       };
-
-      function lowerAnimationLoad() {
-        if (performanceTier === "high") {
-          performanceTier = "medium";
-          Object.assign(CFG, CONFIG_BY_TIER.medium);
-        } else if (performanceTier === "medium") {
-          performanceTier = "low";
-          Object.assign(CFG, CONFIG_BY_TIER.low);
-        } else if (performanceTier === "low") {
-          performanceTier = "static";
-          Object.assign(CFG, CONFIG_BY_TIER.static);
-          hero?.classList.add("low-power-mode");
-          return;
-        }
-
-        if (particles.length > CFG.maxParticles) {
-          particles.splice(0, particles.length - CFG.maxParticles);
-        }
-      }
-
-      if (performanceTier === "static") {
-        hero?.classList.add("low-power-mode");
-      }
 
       let renderDpr = 1;
       let resizeRaf = 0;
@@ -732,10 +637,9 @@
       }
 
       function resize() {
-        renderDpr = Math.min(
-          CFG.renderDprCap || 1,
-          Math.max(1, window.devicePixelRatio || 1)
-        );
+        renderDpr = isMobile
+          ? 1
+          : Math.min(2, Math.max(1, window.devicePixelRatio || 1));
 
         const rect = canvas.getBoundingClientRect();
         if (!rect.width || !rect.height) return false;
@@ -1274,8 +1178,6 @@
         }
 
         function step(stepsPerFrame) {
-          if (CFG.disableLBM || stepsPerFrame <= 0) return;
-
           for (let s = 0; s < stepsPerFrame; s++) {
             stream();
             collide();
@@ -1283,17 +1185,7 @@
           computeCurlField();
         }
 
-        function safeSampleVelocity(px, py) {
-          if (CFG.disableLBM || !ux || !uy) return { vx: 0, vy: 0 };
-          return sampleVelocity(px, py);
-        }
-
-        function safeSampleCurl(px, py) {
-          if (CFG.disableLBM || !curlField) return 0;
-          return sampleCurl(px, py);
-        }
-
-        return { init, step, sampleVelocity: safeSampleVelocity, sampleCurl: safeSampleCurl };
+        return { init, step, sampleVelocity, sampleCurl };
       })();
 
       const EDGE_P1X = 240;
@@ -1336,13 +1228,9 @@
 
       const particles = [];
       let last = performance.now();
-      let lastDraw = 0;
       let emitCarry = 0;
       let animating = false;
       let started = false;
-      let slowFrameCount = 0;
-      let performanceCheckFrames = 0;
-      let performanceCheckTotal = 0;
 
       function spawn(count) {
         for (let i = 0; i < count; i++) {
@@ -1448,7 +1336,7 @@
             continue;
           }
 
-          zone.carry += (performanceTier === "low" ? 6 : performanceTier === "medium" ? 14 : 42) * zone.heat * (0.45 + wake * 1.2) * dt;
+          zone.carry += (isMobile ? 14 : 55) * zone.heat * (0.45 + wake * 1.2) * dt;
           const n = Math.floor(zone.carry);
           zone.carry -= n;
           if (n > 0) spawnBreath(n, zone.x, 0.72 + zone.heat * 0.72);
@@ -1508,7 +1396,7 @@
         if (p.isDarkSwirl) alpha *= 0.6;
         if (p.breathBorn) alpha = clamp(alpha * 1.18, 0, 0.82);
 
-        if (!CFG.disableGlow) {
+        if (!isMobile) {
           const glowAlpha =
             alpha *
             Math.pow(1 - t, 2.8) *
@@ -1541,39 +1429,9 @@
       }
 
       function step(now) {
-        if (CFG.targetFPS === 0) {
-          hero?.classList.add("low-power-mode");
-          animating = false;
-          return;
-        }
-
-        const minFrameMs = 1000 / CFG.targetFPS;
-        if (now - lastDraw < minFrameMs) {
-          requestAnimationFrame(step);
-          return;
-        }
-
-        const frameMs = now - last;
-        const raw = Math.min(0.05, frameMs / 1000);
+        const raw = Math.min(0.033, (now - last) / 1000);
         const dt = Math.min(0.06, raw * CFG.timeScale);
         last = now;
-        lastDraw = now;
-
-        performanceCheckFrames++;
-        performanceCheckTotal += frameMs;
-        if (performanceCheckFrames >= 45) {
-          const avgFrameMs = performanceCheckTotal / performanceCheckFrames;
-          if (avgFrameMs > 42) slowFrameCount++;
-          else slowFrameCount = Math.max(0, slowFrameCount - 1);
-
-          if (slowFrameCount >= 2) {
-            lowerAnimationLoad();
-            slowFrameCount = 0;
-          }
-
-          performanceCheckFrames = 0;
-          performanceCheckTotal = 0;
-        }
 
         lbm.step(CFG.lbmSteps);
 
@@ -1607,7 +1465,7 @@
           updateBreathUI();
 
           const breathPower = lerp(1, 2.35, breathProgress);
-          breathCarry += (performanceTier === "low" ? 42 : performanceTier === "medium" ? 105 : 320) * dt * breathPower;
+          breathCarry += (isMobile ? 105 : 430) * dt * breathPower;
           const breathN = Math.floor(breathCarry);
           breathCarry -= breathN;
           spawnBreath(breathN, zone.x || breathPointer.x || canvas.width * 0.5, breathPower);
@@ -1620,7 +1478,7 @@
         if (galleryUnlocked && !celebrationBurstDone) {
           celebrationBurstDone = true;
           const centerZone = stokeZones[stokeZones.length - 1] || strengthenStokeZone(canvas.width * 0.5, 0.4);
-          spawnBreath(performanceTier === "low" ? 28 : performanceTier === "medium" ? 80 : 190, centerZone.x, 2.65);
+          spawnBreath(isMobile ? 90 : 260, centerZone.x, 2.65);
         }
 
         for (let i = particles.length - 1; i >= 0; i--) {
@@ -1684,23 +1542,15 @@
       }
 
       document.addEventListener("visibilitychange", () => {
-        if (!document.hidden && !animating && started && CFG.targetFPS !== 0) {
+        if (!document.hidden && !animating && started) {
           animating = true;
           last = performance.now();
-          lastDraw = performance.now();
           requestAnimationFrame(step);
         }
       });
 
       function start() {
         if (started) return;
-
-        if (CFG.targetFPS === 0) {
-          hero?.classList.add("low-power-mode");
-          started = true;
-          return;
-        }
-
         if (!resize()) {
           requestAnimationFrame(start);
           return;
@@ -1712,7 +1562,6 @@
         if (!document.hidden) {
           animating = true;
           last = performance.now();
-          lastDraw = performance.now();
           requestAnimationFrame(step);
         }
       }
