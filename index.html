@@ -27,6 +27,13 @@
     }
 
     .hero {
+      --wake: 0;
+      --title-main-alpha: 0.72;
+      --title-spiro-alpha: 0.68;
+      --title-glow: 4px;
+      --title-glow-wide: 16px;
+      --title-glow-alpha: 0.06;
+      --title-glow-soft-alpha: 0.04;
       position: relative;
       width: 100%;
       height: 70svh;
@@ -87,11 +94,17 @@
       font-style: italic;
       font-weight: 300;
       letter-spacing: 0.07em;
-      color: rgba(255, 215, 150, 0.72);
+      color: rgba(255, 215, 150, var(--title-main-alpha));
       transform: translateX(2%) scale(1.08);
       transform-origin: left center;
       position: relative;
       z-index: 2;
+      text-shadow:
+        0 0 var(--title-glow) rgba(255, 181, 88, var(--title-glow-alpha)),
+        0 0 var(--title-glow-wide) rgba(230, 101, 31, var(--title-glow-soft-alpha));
+      transition:
+        color 0.18s ease,
+        text-shadow 0.18s ease;
     }
 
     .t2 {
@@ -101,12 +114,19 @@
       font-size: 0.62em;
       letter-spacing: 0.42em;
       text-indent: 0.42em;
-      color: rgba(220, 165, 80, 0.68);
+      color: rgba(220, 165, 80, var(--title-spiro-alpha));
       transform: translateX(34%) scale(0.92);
       transform-origin: left center;
-      filter: blur(0.3px);
+      filter: blur(0.3px) drop-shadow(0 0 var(--title-glow) rgba(238, 126, 45, var(--title-glow-alpha)));
       position: relative;
       z-index: 1;
+      text-shadow:
+        0 0 var(--title-glow) rgba(255, 173, 82, var(--title-glow-alpha)),
+        0 0 var(--title-glow-wide) rgba(202, 83, 27, var(--title-glow-soft-alpha));
+      transition:
+        color 0.18s ease,
+        filter 0.18s ease,
+        text-shadow 0.18s ease;
     }
 
     .subtitle {
@@ -187,6 +207,162 @@
       height: 100%;
     }
 
+    .breath-section {
+      position: relative;
+      z-index: 9;
+      padding: 1.25rem 5% 1.7rem;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(120, 51, 20, 0.18), transparent 34rem),
+        #0e0b08;
+      border-top: 1px solid rgba(255, 150, 45, 0.1);
+      border-bottom: 1px solid rgba(255, 150, 45, 0.08);
+    }
+
+    .breath-ui {
+      --breath-progress: 0;
+      position: relative;
+      z-index: 8;
+      width: min(92vw, 460px);
+      margin: 0 auto;
+      text-align: center;
+      color: rgba(232, 212, 184, 0.92);
+      pointer-events: auto;
+      transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+    }
+
+    .breath-copy {
+      font-family: "Cormorant", Georgia, serif;
+      font-style: italic;
+      font-size: clamp(1.05rem, 2vw, 1.45rem);
+      letter-spacing: 0.03em;
+      text-shadow: 0 0 18px rgba(199, 91, 28, 0.44);
+      margin-bottom: 0.55rem;
+    }
+
+    .breath-subcopy {
+      display: block;
+      margin-top: 0.15rem;
+      font-family: Georgia, serif;
+      font-size: 0.72rem;
+      font-style: normal;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 187, 105, 0.48);
+    }
+
+    .breath-pad {
+      appearance: none;
+      border: 1px solid rgba(255, 170, 82, 0.28);
+      background:
+        radial-gradient(circle at 50% 100%, rgba(147, 58, 20, 0.46), transparent 62%),
+        rgba(24, 14, 9, 0.72);
+      color: rgba(241, 221, 195, 0.92);
+      border-radius: 999px;
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.48),
+        inset 0 0 22px rgba(183, 75, 24, 0.18);
+      cursor: pointer;
+      font-family: Georgia, serif;
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.82rem 1.2rem;
+      pointer-events: auto;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+    }
+
+    .breath-pad:hover,
+    .breath-pad:focus-visible,
+    body.is-breathing .breath-pad {
+      outline: none;
+      transform: translateY(-2px) scale(1.015);
+      border-color: rgba(255, 190, 105, 0.56);
+      box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.58),
+        0 0 32px rgba(190, 80, 26, 0.28),
+        inset 0 0 30px rgba(210, 91, 29, 0.24);
+    }
+
+    .breath-meter {
+      width: min(310px, 72vw);
+      height: 4px;
+      margin: 0.85rem auto 0;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(91, 48, 24, 0.55);
+      box-shadow: 0 0 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .breath-fill {
+      display: block;
+      height: 100%;
+      width: 100%;
+      transform: scaleX(var(--breath-progress));
+      transform-origin: left center;
+      background: linear-gradient(
+        90deg,
+        rgba(129, 58, 23, 0.95),
+        rgba(209, 111, 38, 0.95),
+        rgba(255, 189, 97, 0.95)
+      );
+      box-shadow: 0 0 18px rgba(232, 120, 42, 0.5);
+      transition: transform 0.08s linear;
+    }
+
+    .breath-status {
+      min-height: 1.2em;
+      margin-top: 0.55rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(218, 164, 104, 0.62);
+    }
+
+    .hero-gallery-btn {
+      margin-top: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+    }
+
+    body.gallery-unlocked .hero-gallery-btn {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    body.gallery-unlocked .breath-pad {
+      cursor: default;
+      border-color: rgba(255, 206, 132, 0.45);
+      background:
+        radial-gradient(circle at 50% 100%, rgba(189, 86, 26, 0.34), transparent 68%),
+        rgba(28, 17, 11, 0.78);
+    }
+
+    .btn.is-locked {
+      opacity: 0.88;
+      background-color: #241812;
+    }
+
+    .breath-ui.pulse {
+      animation: breathPulse 0.9s ease both;
+    }
+
+    @keyframes breathPulse {
+      0%, 100% { transform: scale(1); }
+      35% { transform: scale(1.045); }
+    }
+
+
     main {
       padding: 2rem 5%;
       max-width: 800px;
@@ -263,6 +439,29 @@
         letter-spacing: 0.25em;
         margin-top: 1rem;
       }
+
+      .breath-section {
+        padding: 1rem 4.5% 1.35rem;
+      }
+
+      .breath-ui {
+        width: min(94vw, 380px);
+      }
+
+      .breath-copy {
+        font-size: 1.02rem;
+      }
+
+      .breath-subcopy {
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+      }
+
+      .breath-pad {
+        font-size: 0.78rem;
+        padding: 0.74rem 1rem;
+      }
+
     }
   </style>
 
@@ -329,6 +528,30 @@
     </div>
   </header>
 
+
+  <section class="breath-section" aria-label="Wake the fire to enter the gallery">
+    <div class="breath-ui" id="breathUi" aria-live="polite">
+      <div class="breath-copy">
+        Breathe life into the fire.
+        <span class="breath-subcopy">Hold near the base to wake the flame</span>
+      </div>
+      <button class="breath-pad" id="breathPad" type="button">
+        Hold to breathe
+      </button>
+      <div class="breath-meter" aria-hidden="true">
+        <span class="breath-fill" id="breathFill"></span>
+      </div>
+      <div class="breath-status" id="breathStatus">0%</div>
+      <a
+        href="gallery.html"
+        class="btn hero-gallery-btn"
+        id="heroGalleryLink"
+        data-gallery-link
+        aria-disabled="true"
+      >Enter Gallery</a>
+    </div>
+  </section>
+
   <main>
     <section class="intro">
       <blockquote>
@@ -355,7 +578,7 @@
         pulse, history and abstraction.
       </p>
 
-      <a href="gallery.html" class="btn">View Art Gallery</a>
+      <a href="gallery.html" class="btn" data-gallery-link>View Art Gallery</a>
     </section>
   </main>
 
@@ -375,8 +598,8 @@
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
       const CFG = {
-        baseEmission: prefersReduced ? 0 : isMobile ? 34 : 220,
-        maxParticles: isMobile ? 220 : 2200,
+        baseEmission: prefersReduced ? 0 : isMobile ? 26 : 140,
+        maxParticles: isMobile ? 220 : 1500,
         rise: 300,
         drag: 0.975,
         lifeMin: 3.2,
@@ -442,6 +665,232 @@
       const rand = (a, b) => a + Math.random() * (b - a);
       const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
       const lerp = (a, b, t) => a + (b - a) * t;
+
+      const hero = canvas.closest(".hero");
+      const breathUi = document.getElementById("breathUi");
+      const breathPad = document.getElementById("breathPad");
+      const breathFill = document.getElementById("breathFill");
+      const breathStatus = document.getElementById("breathStatus");
+      const heroGalleryLink = document.getElementById("heroGalleryLink");
+      const galleryLinks = Array.from(document.querySelectorAll('a[href="gallery.html"]'));
+
+      const BREATH_REQUIRED_SECONDS = prefersReduced ? 1.4 : 5.8;
+      let breathEnergy = 0;
+      let breathCarry = 0;
+      let isBreathing = false;
+      let galleryUnlocked = false;
+      let trackedFirstBreath = false;
+      let celebrationBurstDone = false;
+      let breathPointer = { x: 0, y: 0 };
+      const stokeZones = [];
+
+      function getBreathProgress() {
+        return clamp(breathEnergy / BREATH_REQUIRED_SECONDS, 0, 1);
+      }
+
+      function trackEvent(name, params = {}) {
+        if (typeof window.gtag === "function") {
+          window.gtag("event", name, params);
+        }
+      }
+
+      function updateWakeVisuals(progress) {
+        const wake = clamp(progress, 0, 1);
+        if (!hero) return;
+        hero.style.setProperty("--wake", wake.toFixed(3));
+        hero.style.setProperty("--title-main-alpha", (0.72 + wake * 0.25).toFixed(3));
+        hero.style.setProperty("--title-spiro-alpha", (0.68 + wake * 0.27).toFixed(3));
+        hero.style.setProperty("--title-glow", `${(4 + wake * 28).toFixed(1)}px`);
+        hero.style.setProperty("--title-glow-wide", `${(16 + wake * 70).toFixed(1)}px`);
+        hero.style.setProperty("--title-glow-alpha", (0.06 + wake * 0.58).toFixed(3));
+        hero.style.setProperty("--title-glow-soft-alpha", (0.04 + wake * 0.42).toFixed(3));
+      }
+
+      function updateBreathUI() {
+        const progress = getBreathProgress();
+        updateWakeVisuals(progress);
+        if (breathUi) breathUi.style.setProperty("--breath-progress", progress.toFixed(3));
+        if (breathFill) breathFill.style.transform = `scaleX(${progress.toFixed(3)})`;
+        if (breathStatus) {
+          breathStatus.textContent = galleryUnlocked
+            ? "The flame is awake."
+            : `${Math.round(progress * 100)}% awakened`;
+        }
+      }
+
+      function pulseBreathUI() {
+        if (!breathUi) return;
+        breathUi.classList.remove("pulse");
+        void breathUi.offsetWidth;
+        breathUi.classList.add("pulse");
+      }
+
+      function unlockGallery({ quiet = false } = {}) {
+        if (galleryUnlocked) return;
+        galleryUnlocked = true;
+        breathEnergy = BREATH_REQUIRED_SECONDS;
+        document.body.classList.add("gallery-unlocked");
+        document.body.classList.remove("is-breathing");
+        if (breathPad) {
+          breathPad.textContent = "The flame is awake";
+          breathPad.setAttribute("aria-pressed", "true");
+        }
+        if (heroGalleryLink) heroGalleryLink.setAttribute("aria-disabled", "false");
+        galleryLinks.forEach((link) => {
+          link.classList.remove("is-locked");
+          link.setAttribute("aria-disabled", "false");
+          if (link !== heroGalleryLink) link.textContent = "View Art Gallery";
+        });
+        try {
+          sessionStorage.setItem("siennaSpiroFireAwake", "1");
+        } catch (_) {}
+        updateBreathUI();
+        if (!quiet) {
+          trackEvent("fire_awakened", {
+            required_seconds: BREATH_REQUIRED_SECONDS,
+          });
+        }
+      }
+
+      function lockGalleryLinks() {
+        galleryLinks.forEach((link) => {
+          if (link !== heroGalleryLink) {
+            link.classList.add("is-locked");
+            link.setAttribute("aria-disabled", "true");
+            link.textContent = "Wake the Fire to Enter Gallery";
+          }
+
+          link.addEventListener("click", (event) => {
+            if (galleryUnlocked) return;
+            event.preventDefault();
+            pulseBreathUI();
+            hero?.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        });
+      }
+
+      function setBreathPointerFromEvent(event) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = Number.isFinite(event.clientX)
+          ? event.clientX
+          : rect.left + rect.width / 2;
+        const clientY = Number.isFinite(event.clientY)
+          ? event.clientY
+          : rect.top + rect.height * 0.82;
+
+        breathPointer.x = clamp(clientX - rect.left, 0, rect.width) * renderDpr;
+        breathPointer.y = clamp(clientY - rect.top, 0, rect.height) * renderDpr;
+      }
+
+      function strengthenStokeZone(sourceX, amount = 0.15) {
+        const x = clamp(
+          Number.isFinite(sourceX) ? sourceX : canvas.width * 0.5,
+          canvas.width * 0.04,
+          canvas.width * 0.96
+        );
+        const mergeDistance = canvas.width * 0.13;
+        let zone = null;
+        let nearest = Infinity;
+
+        for (const candidate of stokeZones) {
+          const d = Math.abs(candidate.x - x);
+          if (d < nearest && d < mergeDistance) {
+            nearest = d;
+            zone = candidate;
+          }
+        }
+
+        if (!zone) {
+          zone = {
+            x,
+            y: edgeY(x),
+            heat: 0,
+            age: 0,
+            carry: 0,
+            wobble: rand(0, Math.PI * 2),
+          };
+          stokeZones.push(zone);
+          if (stokeZones.length > 6) stokeZones.shift();
+        }
+
+        zone.x = lerp(zone.x, x, 0.18);
+        zone.y = edgeY(zone.x);
+        zone.heat = clamp(zone.heat + amount, 0, 1.35);
+        zone.age = 0;
+        breathPointer.x = zone.x;
+        breathPointer.y = zone.y;
+        return zone;
+      }
+
+      function beginBreath(event) {
+        if (galleryUnlocked) return;
+        const target = event.target;
+        if (target?.closest?.("a")) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const yRatio = Number.isFinite(event.clientY)
+          ? (event.clientY - rect.top) / Math.max(1, rect.height)
+          : 0.82;
+
+        const startedFromControl = target?.closest?.("#breathUi");
+        if (!startedFromControl && yRatio < 0.45) {
+          pulseBreathUI();
+          return;
+        }
+
+        setBreathPointerFromEvent(event);
+        strengthenStokeZone(breathPointer.x, 0.18);
+        isBreathing = true;
+        document.body.classList.add("is-breathing");
+        breathPad?.setAttribute("aria-pressed", "true");
+        if (!trackedFirstBreath) {
+          trackedFirstBreath = true;
+          trackEvent("fire_breath_started");
+        }
+        if (event.pointerId && breathPad?.setPointerCapture && startedFromControl) {
+          try {
+            breathPad.setPointerCapture(event.pointerId);
+          } catch (_) {}
+        }
+        event.preventDefault?.();
+      }
+
+      function endBreath() {
+        if (galleryUnlocked) return;
+        isBreathing = false;
+        document.body.classList.remove("is-breathing");
+        breathPad?.setAttribute("aria-pressed", "false");
+      }
+
+      function maybeRestoreUnlockedState() {
+        lockGalleryLinks();
+        let restored = false;
+        try {
+          restored = sessionStorage.getItem("siennaSpiroFireAwake") === "1";
+        } catch (_) {}
+
+        if (restored) {
+          unlockGallery({ quiet: true });
+        } else {
+          updateBreathUI();
+        }
+      }
+
+      hero?.addEventListener("pointerdown", beginBreath);
+      breathPad?.addEventListener("pointerdown", beginBreath);
+      window.addEventListener("pointermove", (event) => {
+        if (isBreathing) setBreathPointerFromEvent(event);
+      });
+      window.addEventListener("pointerup", endBreath);
+      window.addEventListener("pointercancel", endBreath);
+      breathPad?.addEventListener("keydown", (event) => {
+        if (event.code === "Space" || event.code === "Enter") beginBreath(event);
+      });
+      breathPad?.addEventListener("keyup", (event) => {
+        if (event.code === "Space" || event.code === "Enter") endBreath();
+      });
+      maybeRestoreUnlockedState();
+
 
       const lbm = (() => {
         const W = 200;
@@ -797,7 +1246,91 @@
             brightnessVariation: rand(0.8, 1.1),
             oscillationFreq: rand(1.5, 4.0),
             isDarkSwirl: Math.random() < 0.15,
+            breathBorn: false,
           });
+        }
+      }
+
+      function spawnBreath(count, sourceX, intensity = 1) {
+        if (prefersReduced) return;
+
+        const progress = getBreathProgress();
+        const spread = canvas.width * lerp(0.08, 0.26, progress);
+        const originX = Number.isFinite(sourceX) ? sourceX : canvas.width * 0.5;
+
+        for (let i = 0; i < count; i++) {
+          if (particles.length >= CFG.maxParticles) return;
+
+          const x = clamp(originX + rand(-spread, spread), 0, canvas.width);
+          const sy = edgeY(x);
+          const angle = rand(-Math.PI * 0.6, -Math.PI * 0.4);
+          const speed = rand(120, 290) * intensity;
+
+          particles.push({
+            x,
+            y: sy + rand(-10, 4) * renderDpr,
+            vx: Math.cos(angle) * speed + rand(-40, 40),
+            vy: Math.sin(angle) * speed + rand(-50, -10),
+            r: rand(CFG.radiusMin * 1.15, CFG.radiusMax * 2.15) * rand(0.8, 1.35),
+            life: 0,
+            ttl: rand(CFG.lifeMin * 1.05, CFG.lifeMax * 1.35),
+            fadeStartRatio: rand(0.42, 0.86),
+            riseStrength: rand(1.05, 1.75),
+            colorShift: rand(-0.25, 0.35),
+            brightnessVariation: rand(1.1, 1.65),
+            oscillationFreq: rand(1.2, 3.4),
+            isDarkSwirl: Math.random() < 0.08,
+            breathBorn: true,
+          });
+        }
+      }
+
+      function drawStokeGlows(wake) {
+        if (prefersReduced || !stokeZones.length) return;
+        ctx.globalCompositeOperation = "lighter";
+
+        for (const zone of stokeZones) {
+          zone.y = edgeY(zone.x);
+          const heat = clamp(zone.heat, 0, 1.35);
+          if (heat <= 0.02) continue;
+
+          const pulse = 0.88 + Math.sin(performance.now() * 0.0022 + zone.wobble) * 0.12;
+          const radius = canvas.width * lerp(0.08, 0.22, clamp(heat + wake * 0.35, 0, 1)) * pulse;
+          const gx = zone.x;
+          const gy = zone.y - 20 * renderDpr;
+          const glow = ctx.createRadialGradient(gx, gy, 0, gx, gy, radius);
+          glow.addColorStop(0, `rgba(255,190,72,${0.08 + heat * 0.16})`);
+          glow.addColorStop(0.18, `rgba(235,105,32,${0.1 + heat * 0.18})`);
+          glow.addColorStop(0.58, `rgba(145,53,20,${0.05 + heat * 0.1})`);
+          glow.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(gx, gy, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.globalCompositeOperation = "source-over";
+      }
+
+      function updateStokeZones(dt, wake) {
+        for (let i = stokeZones.length - 1; i >= 0; i--) {
+          const zone = stokeZones[i];
+          zone.age += dt;
+          zone.y = edgeY(zone.x);
+
+          const floor = galleryUnlocked ? 0.22 : 0;
+          const decay = Math.pow(0.996, dt * 60);
+          zone.heat = Math.max(floor, zone.heat * decay);
+
+          if (!galleryUnlocked && zone.heat < 0.025 && zone.age > 4) {
+            stokeZones.splice(i, 1);
+            continue;
+          }
+
+          zone.carry += (isMobile ? 14 : 55) * zone.heat * (0.45 + wake * 1.2) * dt;
+          const n = Math.floor(zone.carry);
+          zone.carry -= n;
+          if (n > 0) spawnBreath(n, zone.x, 0.72 + zone.heat * 0.72);
         }
       }
 
@@ -852,6 +1385,7 @@
         }
 
         if (p.isDarkSwirl) alpha *= 0.6;
+        if (p.breathBorn) alpha = clamp(alpha * 1.18, 0, 0.82);
 
         if (!isMobile) {
           const glowAlpha =
@@ -892,15 +1426,50 @@
 
         lbm.step(CFG.lbmSteps);
 
+        const breathProgress = getBreathProgress();
+        const wake = galleryUnlocked ? 1 : breathProgress;
+        updateWakeVisuals(wake);
+        const fade = rand(CFG.bgFadeMin, CFG.bgFadeMax) * (1 - wake * 0.32);
+
         ctx.globalCompositeOperation = "source-over";
-        ctx.fillStyle = `rgba(0,0,0,${rand(CFG.bgFadeMin, CFG.bgFadeMax)})`;
+        ctx.fillStyle = `rgba(0,0,0,${fade})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        drawStokeGlows(wake);
+
         if (CFG.baseEmission > 0) {
-          emitCarry += CFG.baseEmission * dt;
+          const ambientRate = CFG.baseEmission * lerp(0.72, 1.55, wake);
+          emitCarry += ambientRate * dt;
           const n = Math.floor(emitCarry);
           emitCarry -= n;
           spawn(n);
+        }
+
+        updateStokeZones(dt, wake);
+
+        if (isBreathing && !galleryUnlocked) {
+          breathEnergy = clamp(breathEnergy + dt, 0, BREATH_REQUIRED_SECONDS);
+          const zone = strengthenStokeZone(
+            breathPointer.x || canvas.width * 0.5,
+            dt * lerp(0.18, 0.48, breathProgress)
+          );
+          updateBreathUI();
+
+          const breathPower = lerp(1, 2.35, breathProgress);
+          breathCarry += (isMobile ? 105 : 430) * dt * breathPower;
+          const breathN = Math.floor(breathCarry);
+          breathCarry -= breathN;
+          spawnBreath(breathN, zone.x || breathPointer.x || canvas.width * 0.5, breathPower);
+
+          if (breathEnergy >= BREATH_REQUIRED_SECONDS) {
+            unlockGallery();
+          }
+        }
+
+        if (galleryUnlocked && !celebrationBurstDone) {
+          celebrationBurstDone = true;
+          const centerZone = stokeZones[stokeZones.length - 1] || strengthenStokeZone(canvas.width * 0.5, 0.4);
+          spawnBreath(isMobile ? 90 : 260, centerZone.x, 2.65);
         }
 
         for (let i = particles.length - 1; i >= 0; i--) {
@@ -929,6 +1498,21 @@
             (-curlVal * CFG.curlScale + (fluid.vx - flowBias) * CFG.lbmInfluence) *
             dt;
           p.vy += (-fluid.vy * CFG.lbmInfluence * 0.5 - buoy) * dt;
+
+          for (const zone of stokeZones) {
+            const zx = zone.x;
+            const zy = zone.y - 26 * renderDpr;
+            const dx = p.x - zx;
+            const dy = p.y - zy;
+            const dist = Math.hypot(dx, dy) || 1;
+            const radius = canvas.width * 0.18;
+            if (dist < radius) {
+              const influence = Math.pow(1 - dist / radius, 2) * zone.heat;
+              const spin = p.breathBorn ? 185 : 95;
+              p.vx += (-dy / dist) * spin * influence * dt;
+              p.vy += (dx / dist) * spin * 0.34 * influence * dt - 70 * influence * dt;
+            }
+          }
 
           p.vx *= Math.pow(CFG.drag, dt * 60);
           p.vy *= Math.pow(CFG.drag, dt * 60);
